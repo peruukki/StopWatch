@@ -17,13 +17,17 @@ namespace StopWatch
     private StopTimes mStopTimes;
 
     private Label mTimeNowLabel;
-    private List<Label> mStopTimesView;
+    private List<Label[]> mStopTimesView;
+    private Panel mStopTimesPanel;
     private Timer mTimer;
-    private TableLayoutPanel mLayout;
 
     private string mTimetableFile = TIMETABLE_DIR + "1310137.html";
+    //private string mTimetableFile = TIMETABLE_DIR + "1434180.html";
+    
     private int mStopTimeCount = STOP_TIME_DEFAULT_COUNT;
     private int mStopTimeDelayMin = STOP_TIME_DEFAULT_DELAY_MIN;
+    private int mLabelHeight;
+    private int mLastHeight;
 
     public MainWindow()
     {
@@ -37,19 +41,22 @@ namespace StopWatch
     {
       mTimeNowLabel = new Label();
       mTimeNowLabel.AutoSize = true;
-      mLayout.Controls.Add(mTimeNowLabel);
+      Controls.Add(mTimeNowLabel);
     }
 
     private void InitializeStopTimesView()
     {
-      mStopTimesView = new List<Label>(mStopTimeCount);
-      for (int i = 0; i < mStopTimeCount; ++i)
-      {
-        Label stopTimeLabel = new Label();
-        stopTimeLabel.AutoSize = true;
-        mStopTimesView.Add(stopTimeLabel);
-        mLayout.Controls.Add(stopTimeLabel);
-      }
+      TableLayoutPanel stopTimesPanel = new TableLayoutPanel();
+      stopTimesPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Top;
+      stopTimesPanel.Location = new Point(0, 20);
+      stopTimesPanel.AutoSize = true;
+      stopTimesPanel.ColumnCount = 2;
+      Controls.Add(stopTimesPanel);
+      mStopTimesPanel = stopTimesPanel;
+
+      CreateStopTimesView();
+
+      mLabelHeight = mStopTimesView[0][0].Height + 1;
     }
 
     private void InitializeTimer()
@@ -66,6 +73,54 @@ namespace StopWatch
       UpdateView();
       mTimeNowLabel.Focus();
       mTimeNowLabel.Update();
+      UpdateHeight();
+
+      ResizeEnd += new System.EventHandler(this.MainWindow_Resize);
+    }
+
+    private void MainWindow_Resize(object sender, EventArgs e)
+    {
+      int rowDiff = (ClientSize.Height - mLastHeight) / mLabelHeight;
+      int stopTimeCount = mStopTimeCount + rowDiff;
+      if (stopTimeCount < 1)
+      {
+        stopTimeCount = 1;
+      }
+
+      if (stopTimeCount != mStopTimeCount)
+      {
+        mStopTimeCount = stopTimeCount;
+        CreateStopTimesView();
+        UpdateView();
+      }
+      UpdateHeight();
+    }
+
+    private void CreateStopTimesView()
+    {
+      mStopTimesPanel.Controls.Clear();
+      mStopTimesView = new List<Label[]>(mStopTimeCount);
+      for (int i = 0; i < mStopTimeCount; ++i)
+      {
+        Label[] stopTimeLabels = new Label[2];
+
+        for (int j = 0; j < stopTimeLabels.Length; j++)
+        {
+          stopTimeLabels[j] = new Label();
+          stopTimeLabels[j].AutoSize = true;
+        }
+
+        mStopTimesView.Add(stopTimeLabels);
+        mStopTimesPanel.Controls.AddRange(stopTimeLabels);
+      }
+    }
+
+    private void UpdateHeight()
+    {
+      int height = (mStopTimesPanel.Top + mStopTimesPanel.Padding.Vertical) +
+                   (mStopTimeCount * mLabelHeight) + Padding.Bottom;
+      ClientSize = new Size(ClientSize.Width, height);
+      mLastHeight = height;
     }
 
     private void UpdateView()
@@ -78,9 +133,9 @@ namespace StopWatch
       List<StopTime> stops = mStopTimes.GetNextStops(nextStopsSpan, mStopTimeCount);
       for (int i = 0; i < stops.Count && i < mStopTimesView.Count; ++i)
       {
-        mStopTimesView[i].Text = String.Format("{0}  {1}",
-                                               stops[i].ToString(),
-                                               stops[i].GetDifference(nowSpan, i == 0));
+        mStopTimesView[i][0].Text = String.Format("{0}", stops[i].ToString());
+        mStopTimesView[i][1].Text = String.Format("{0}",
+                                                  stops[i].GetDifference(nowSpan, i == 0));
       }
     }
 

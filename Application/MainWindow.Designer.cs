@@ -35,18 +35,12 @@ namespace StopWatch
       // MainWindow
       // 
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-      this.AutoSize = true;
-      this.ClientSize = new Size(10, 10);
+      this.ClientSize = new Size(150, 150);
       this.Name = "MainWindow";
       this.ShowIcon = false;
       this.Font = new Font("Tahoma", 10);
       this.Text = "Stop Watch";
       this.Load += new System.EventHandler(this.MainWindow_Load);
-
-      this.mLayout = new TableLayoutPanel();
-      this.mLayout.AutoSize = true;
-      this.Controls.Add(this.mLayout);
-
       this.ResumeLayout(false);
     }
 
