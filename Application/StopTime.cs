@@ -22,10 +22,11 @@ namespace StopWatch
       mBus = bus;
     }
 
-    public string GetDifference(TimeSpan time, bool showSeconds)
+    public string GetDifference(DateTime date, bool showSeconds)
     {
-      int hourAddition = (time.Hours > mHour) ? 24 : 0;
-      TimeSpan diff = new TimeSpan(mHour + hourAddition, mMinute, 0).Subtract(time);
+      int hourAddition = (date.Hour > mHour) ? 24 : 0;
+      TimeSpan diff = new TimeSpan(mHour + hourAddition, mMinute, 0)
+                        .Subtract(new TimeSpan(date.Hour, date.Minute, date.Second));
 
       StringBuilder builder = new StringBuilder();
       builder.Append(String.Format("{0,3} min", 60 * diff.Hours + diff.Minutes));

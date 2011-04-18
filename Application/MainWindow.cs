@@ -12,7 +12,6 @@ namespace StopWatch
   {
     private const int STOP_TIME_DEFAULT_COUNT = 5;
     private const int STOP_TIME_DEFAULT_DELAY_MIN = 5;
-    private const string TIMETABLE_DIR = @"..\..\";
 
     private StopTimes mStopTimes;
 
@@ -20,21 +19,18 @@ namespace StopWatch
     private List<Label[]> mStopTimesView;
     private Panel mStopTimesPanel;
     private Timer mTimer;
-
-    private string mTimetableFile = TIMETABLE_DIR + "1310137.html";
-    //private string mTimetableFile = TIMETABLE_DIR + "1434180.html";
     
     private int mStopTimeCount = STOP_TIME_DEFAULT_COUNT;
     private int mStopTimeDelayMin = STOP_TIME_DEFAULT_DELAY_MIN;
     private int mLabelHeight;
     private int mLastHeight;
 
-    public MainWindow()
+    public MainWindow(StopTimes stopTimes)
     {
+      mStopTimes = stopTimes;
       InitializeComponent();
       InitializeTimeNowLabel();
       InitializeStopTimesView();
-      InitializeTimer();
     }
 
     private void InitializeTimeNowLabel()
@@ -56,7 +52,14 @@ namespace StopWatch
 
       CreateStopTimesView();
 
-      mLabelHeight = mStopTimesView[0][0].Height + 1;
+      if (mStopTimesView.Count > 0)
+      {
+        mLabelHeight = mStopTimesView[0][0].Height + 1;
+      }
+      else
+      {
+        mLabelHeight = mTimeNowLabel.Height + 1;
+      }
     }
 
     private void InitializeTimer()
@@ -69,12 +72,12 @@ namespace StopWatch
 
     private void MainWindow_Load(object sender, EventArgs e)
     {
-      mStopTimes = new StopTimeParser().Parse(mTimetableFile);
       UpdateView();
       mTimeNowLabel.Focus();
       mTimeNowLabel.Update();
       UpdateHeight();
 
+      InitializeTimer();
       ResizeEnd += new System.EventHandler(this.MainWindow_Resize);
     }
 
@@ -128,14 +131,13 @@ namespace StopWatch
       DateTime nowTime = DateTime.Now;
       mTimeNowLabel.Text = String.Format("Time is {0}", nowTime.ToLongTimeString());
 
-      TimeSpan nowSpan = new TimeSpan(nowTime.Hour, nowTime.Minute, nowTime.Second);
-      TimeSpan nextStopsSpan = nowSpan.Add(new TimeSpan(0, mStopTimeDelayMin, 0));
-      List<StopTime> stops = mStopTimes.GetNextStops(nextStopsSpan, mStopTimeCount);
+      nowTime.AddMinutes(mStopTimeDelayMin);
+      List<StopTime> stops = mStopTimes.GetNextStops(nowTime, mStopTimeCount);
       for (int i = 0; i < stops.Count && i < mStopTimesView.Count; ++i)
       {
         mStopTimesView[i][0].Text = String.Format("{0}", stops[i].ToString());
         mStopTimesView[i][1].Text = String.Format("{0}",
-                                                  stops[i].GetDifference(nowSpan, i == 0));
+                                                  stops[i].GetDifference(nowTime, i == 0));
       }
     }
 

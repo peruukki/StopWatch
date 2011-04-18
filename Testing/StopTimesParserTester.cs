@@ -14,20 +14,27 @@ namespace StopWatch
     [SetUp]
     public void Init()
     {
-      StopTimeParser parser = new StopTimeParser();
-      times = parser.Parse(@"..\..\1310137.html");
+      times = new StopTimeParser().Parse(@"..\..\1310137.html");
     }
 
     [Test]
-    [Ignore("Decide how to test invalid HTML content")]
+    [ExpectedException(typeof(System.IO.FileNotFoundException))]
+    public void ParseNonExistent()
+    {
+      times = new StopTimeParser().Parse(@"Non-existent-file.html");
+    }
+
+    [Test]
     public void ParseInvalid()
     {
+      times = new StopTimeParser().Parse(@"StopWatch.exe");
+      Assert.That(times.Count, Is.EqualTo(0));
     }
 
     [Test]
     public void ParseValid()
     {
-      Assert.That(times.Count, Is.EqualTo(272));
+      Assert.That(times.Count, Is.EqualTo(457));
       Console.WriteLine(times.Count + " stop times parsed:");
       Console.Write(times);
     }
@@ -35,14 +42,14 @@ namespace StopWatch
     [Test]
     public void GetDifference()
     {
-      TimeSpan span = new TimeSpan(16, 5, 54);
+      DateTime date = DateTime.Now;
 
-      Console.WriteLine("Time is {0}", span);
-      List<StopTime> stops = times.GetNextStops(span, 5);
+      Console.WriteLine("Time is {0}", date);
+      List<StopTime> stops = times.GetNextStops(date, 5);
       bool showSeconds = true;
       foreach (StopTime stop in stops)
       {
-        Console.WriteLine("{0} {1}", stop, stop.GetDifference(span, showSeconds));
+        Console.WriteLine("{0} {1}", stop, stop.GetDifference(date, showSeconds));
         showSeconds = false;
       }
     }

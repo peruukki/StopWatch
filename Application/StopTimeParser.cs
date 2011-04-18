@@ -15,6 +15,7 @@ namespace StopWatch
     private bool mTitleFound = false;
     private int mHour = 0;
     private int mMinute = 0;
+    private Weekday mWeekday;
 
     private StopTimes mStopTimes = new StopTimes();
 
@@ -25,6 +26,8 @@ namespace StopWatch
     private const string CLASS_BUS = "stop_small_codes";
 
     private const string TITLE_WEEKDAYS = "Ma-pe";
+    private const string TITLE_SATURDAY = "Lauantaisin";
+    private const string TITLE_SUNDAY = "Sunnuntaisin";
     private const string HOUR_PREVIOUS = "&nbsp;";
     private const string BUS_PREFIX = "&#47;";
 
@@ -34,10 +37,12 @@ namespace StopWatch
       doc.Load(path);
 
       StringWriter sw = new StringWriter();
-      HtmlNode timeTable = FindTimetable(doc.DocumentNode, sw);
-      if (timeTable != null)
+      HtmlNode rootNode = doc.DocumentNode;
+      for (HtmlNode timeTable = FindTimetable(rootNode, sw);
+           timeTable != null;
+           timeTable = FindTimetable(rootNode, sw))
       {
-        ParseTimetable(timeTable, sw);
+        rootNode = ParseTimetable(timeTable, sw);
       }
       sw.Flush();
       Log(sw.ToString());
@@ -53,6 +58,12 @@ namespace StopWatch
     }
 
     private HtmlNode FindTimetable(HtmlNode node, TextWriter outText)
+    {
+      mTitleFound = false;
+      return FindTimetableRecursive(node, outText);
+    }
+
+    private HtmlNode FindTimetableRecursive(HtmlNode node, TextWriter outText)
     {
       if (HtmlNodeType.Element.Equals(node.NodeType))
       {
@@ -75,12 +86,18 @@ namespace StopWatch
           case "td":
             foreach (HtmlAttribute attribute in node.Attributes.AttributesWithName("class"))
             {
-              if (CLASS_TITLE.Equals(attribute.Value) &&
-                  TITLE_WEEKDAYS.Equals(node.InnerText))
+              if (CLASS_TITLE.Equals(attribute.Value))
               {
-                outText.WriteLine("Found " + TITLE_WEEKDAYS + "!");
-                mTitleFound = true;
-                break;
+                switch (node.InnerText)
+                {
+                  case TITLE_WEEKDAYS:
+                  case TITLE_SATURDAY:
+                  case TITLE_SUNDAY:
+                    outText.WriteLine("Found " + node.InnerText + "!");
+                    mWeekday = GetWeekdayEnum(node.InnerText);
+                    mTitleFound = true;
+                    break;
+                }
               }
             }
             break;
@@ -92,14 +109,39 @@ namespace StopWatch
 
       foreach (HtmlNode subnode in node.ChildNodes)
       {
-        HtmlNode tableNode = FindTimetable(subnode, outText);
+        HtmlNode tableNode = FindTimetableRecursive(subnode, outText);
         if (tableNode != null)
         {
           return tableNode;
         }
       }
 
+      node.RemoveAllChildren();
       return null;
+    }
+
+    private Weekday GetWeekdayEnum(string timetableTitle)
+    {
+      Weekday weekday;
+      switch (timetableTitle)
+      {
+        case TITLE_WEEKDAYS:
+          weekday = Weekday.Weekdays;
+          break;
+
+        case TITLE_SATURDAY:
+          weekday = Weekday.Saturday;
+          break;
+
+        case TITLE_SUNDAY:
+          weekday = Weekday.Sunday;
+          break;
+
+        default:
+          throw new ArgumentOutOfRangeException("Invalid timetable title " +
+                                                timetableTitle);
+      }
+      return weekday;
     }
 
     private static int ParseHour(string text, int currentHour, TextWriter outText)
@@ -150,8 +192,9 @@ namespace StopWatch
               {
                 try
                 {
-                  mStopTimes.Add(mHour, mMinute, ParseBus(node.InnerText));
-                  outText.Write(mStopTimes.GetLatestAddition() + "   ");
+                  StopTime stopTime = mStopTimes.Add(mWeekday, mHour, mMinute,
+                                                     ParseBus(node.InnerText));
+                  outText.Write(stopTime + "   ");
                 }
                 catch (ArgumentException e)
                 {
@@ -172,7 +215,7 @@ namespace StopWatch
       }
     }
 
-    private void ParseTimetable(HtmlNode node, TextWriter outText)
+    private HtmlNode ParseTimetable(HtmlNode node, TextWriter outText)
     {
       foreach (HtmlNode subnode in node.ChildNodes)
       {
@@ -184,6 +227,7 @@ namespace StopWatch
           }
         }
       }
+      return node.ParentNode.ParentNode.ParentNode.ParentNode;
     }
   }
 }

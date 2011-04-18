@@ -6,11 +6,7 @@ namespace StopWatch
 {
   public class StopTimes
   {
-    private static int HOURS_IN_DAY = 24;
-    private static int MINUTES_IN_HOUR = 60;
-
-    private List<StopTime>[] mStopTimes = new List<StopTime>[HOURS_IN_DAY];
-    private StopTime mLatestAddition = null;
+    private Timetable[] mTimetables = new Timetable[Weekday.Count];
     private List<string> mExcludedBuses = new List<string>();
 
     public int Count
@@ -18,9 +14,9 @@ namespace StopWatch
       get
       {
         int count = 0;
-        foreach(List<StopTime> hourStops in mStopTimes)
+        foreach(Timetable timetable in mTimetables)
         {
-          count += hourStops.Count;
+          count += timetable.Count;
         }
         return count;
       }
@@ -28,34 +24,15 @@ namespace StopWatch
 
     public StopTimes()
     {
-      for (int i = 0; i < mStopTimes.Length; i++)
+      for (int i = 0; i < mTimetables.Length; i++)
       {
-        mStopTimes[i] = new List<StopTime>();
+        mTimetables[i] = new Timetable(Weekday.FromOrdinal(i).ToString());
       }
     }
 
-    public void Add(int hour, int minute, string bus)
+    public StopTime Add(Weekday weekDay, int hour, int minute, string bus)
     {
-      if (hour < 0 || hour >= HOURS_IN_DAY)
-      {
-        throw new ArgumentOutOfRangeException("Invalid hour argument " + hour);
-      }
-      if (minute < 0 || minute >= MINUTES_IN_HOUR)
-      {
-        throw new ArgumentOutOfRangeException("Invalid minute argument " + minute);
-      }
-      if (bus == null)
-      {
-        throw new ArgumentNullException("Null bus argument not permitted");
-      }
-
-      mLatestAddition = new StopTime(hour, minute, bus);
-      mStopTimes[hour].Add(mLatestAddition);
-    }
-
-    public StopTime GetLatestAddition()
-    {
-      return mLatestAddition;
+      return mTimetables[weekDay.Ordinal].Add(hour, minute, bus);
     }
 
     private bool IsExcluded(StopTime stopTime)
@@ -97,33 +74,43 @@ namespace StopWatch
       return addCount;
     }
 
-    private int AddNextStopTimes(List<StopTime> destination, List<StopTime>[] source,
+    private int AddNextStopTimes(List<StopTime> destination, Timetable source,
                                  int hour, int count)
     {
       int remainingCount = count;
 
       int endIndex = hour;
-      for (hour = (hour + 1) % source.Length;
+      for (hour = (hour + 1) % Timetable.HOURS_IN_DAY;
            remainingCount > 0 && hour != endIndex;
-           hour = (hour + 1) % source.Length)
+           hour = (hour + 1) % Timetable.HOURS_IN_DAY)
       {
-        remainingCount -= AddIncluded(destination, source[hour], 0, remainingCount);
+        remainingCount -= AddIncluded(destination, source.Get(hour), 0, remainingCount);
       }
 
       return count - remainingCount;
     }
 
-    public List<StopTime> GetNextStops(TimeSpan time, int count)
+    public List<StopTime> GetNextStops(DateTime date, int count)
     {
       List<StopTime> stops = new List<StopTime>(count);
 
-      if (time.Seconds > 0)
+      TimeSpan spanToAdd = TimeSpan.FromMinutes(1);
+      bool addSpan = date.Second > 0;
+      if (addSpan)
       {
-        time = time.Add(new TimeSpan(0, 1, 0));
+        date.Add(spanToAdd);
       }
-      if (AddNextStopTimes(stops, mStopTimes[time.Hours], time.Minutes, count) < count)
+
+      int index = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;
+      if (AddNextStopTimes(stops, mTimetables[index].Get(date.Hour),
+                           date.Minute, count) < count)
       {
-        AddNextStopTimes(stops, mStopTimes, time.Hours, count - stops.Count);
+        AddNextStopTimes(stops, mTimetables[index], date.Hour, count - stops.Count);
+      }
+
+      if (addSpan)
+      {
+        date.Subtract(spanToAdd);
       }
 
       return stops;
@@ -152,19 +139,10 @@ namespace StopWatch
     public override string ToString()
     {
       StringBuilder builder = new StringBuilder();
-
-      foreach (List<StopTime> stopTimes in mStopTimes)
+      foreach (Timetable timetable in mTimetables)
       {
-        if (stopTimes.Count > 0)
-        {
-          foreach (StopTime stopTime in stopTimes)
-          {
-            builder.AppendFormat("{0} ", stopTime);
-          }
-          builder.AppendLine();
-        }
+        builder.Append(timetable.ToString());
       }
-
       return builder.ToString();
     }
   }
