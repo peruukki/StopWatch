@@ -4,7 +4,7 @@ using System.Text;
 
 namespace StopWatch
 {
-  public class StopTime
+  public class StopTime : IComparable
   {
     private int mHour;
     public int Hour { get { return mHour; } }
@@ -41,5 +41,56 @@ namespace StopWatch
     {
       return String.Format("{0:0#}:{1:0#} {2}", mHour, mMinute, mBus);
     }
+
+    #region IComparable Members
+
+    public int CompareTo(object obj)
+    {
+      int result;
+
+      int hour;
+      int minute;
+      if (obj is StopTime)
+      {
+        StopTime other = (StopTime)obj;
+        hour = other.Hour;
+        minute = other.Minute;
+      }
+      else if (obj is DateTime)
+      {
+        DateTime other = (DateTime)obj;
+        hour = other.Hour;
+        minute = other.Minute;
+      }
+      else
+      {
+        throw new ArgumentException("StopTime is not comparable to " + obj.GetType());
+      }
+
+      if (mHour < hour)
+      {
+        result = -1;
+      }
+      else if (mHour > hour)
+      {
+        result = 1;
+      }
+      else if (mMinute < minute)
+      {
+        result = -1;
+      }
+      else if (mMinute > minute)
+      {
+        result = 1;
+      }
+      else
+      {
+        result = 0;
+      }
+
+      return result;
+    }
+
+    #endregion
   }
 }

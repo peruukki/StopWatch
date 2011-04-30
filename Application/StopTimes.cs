@@ -98,7 +98,7 @@ namespace StopWatch
       bool addSpan = date.Second > 0;
       if (addSpan)
       {
-        date.Add(spanToAdd);
+        date = date.Add(spanToAdd);
       }
 
       int index = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;

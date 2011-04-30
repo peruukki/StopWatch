@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using StopWatch;
+using StopWatchTester.Properties;
 
 namespace StopWatch
 {
@@ -14,7 +15,7 @@ namespace StopWatch
     [SetUp]
     public void Init()
     {
-      times = new StopTimeParser().Parse(@"..\..\1310137.html");
+      times = new StopTimeParser().Parse(Settings.Default.TimetableDir + "1310137.html");
     }
 
     [Test]
@@ -42,10 +43,27 @@ namespace StopWatch
     [Test]
     public void GetDifference()
     {
+      DateTime date = new DateTime(2011, 4, 29, 5, 25, 12);
+
+      Console.WriteLine("Time is {0}", date);
+      List<StopTime> stops = StopTimesTester.GetNextStops(times, date, 5, 0);
+      bool showSeconds = true;
+      foreach (StopTime stop in stops)
+      {
+        Console.WriteLine("{0} {1}", stop, stop.GetDifference(date, showSeconds));
+        showSeconds = false;
+        Assert.That(stop.CompareTo(date), Is.GreaterThan(0),
+                    "Stop time > current time");
+      }
+    }
+
+    [Test]
+    public void GetDifferenceNow()
+    {
       DateTime date = DateTime.Now;
 
       Console.WriteLine("Time is {0}", date);
-      List<StopTime> stops = times.GetNextStops(date, 5);
+      List<StopTime> stops = StopTimesTester.GetNextStops(times, date, 5, 1);
       bool showSeconds = true;
       foreach (StopTime stop in stops)
       {
