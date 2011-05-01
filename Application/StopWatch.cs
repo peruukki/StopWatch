@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using StopWatch.Properties;
+using System.Collections.Specialized;
 
 namespace StopWatch
 {
@@ -15,6 +16,10 @@ namespace StopWatch
       StopTimes stopTimes = ParseTimetableFile(Settings.Default.TimetableFile);
       if (stopTimes != null)
       {
+        foreach (string bus in Settings.Default.ExcludedBuses)
+        {
+          stopTimes.ExcludeBus(bus);
+        }
         Application.Run(new MainWindow(stopTimes));
       }
     }
@@ -25,6 +30,12 @@ namespace StopWatch
       {
         switch (args[i])
         {
+          case "-e":
+            StringCollection excludedBuses = new StringCollection();
+            excludedBuses.AddRange(args[i + 1].Split(','));
+            Settings.Default.ExcludedBuses = excludedBuses;
+            break;
+
           case "-f":
             Settings.Default.TimetableFile = args[i + 1];
             break;
