@@ -12,8 +12,7 @@ namespace StopWatch
     {
       ParseCmdLineArguments(args);
 
-      StopTimes stopTimes = ParseTimetableFile(Settings.Default.TimetableDir +
-                                               Settings.Default.TimetableFile);
+      StopTimes stopTimes = ParseTimetableFile(Settings.Default.TimetableFile);
       if (stopTimes != null)
       {
         Application.Run(new MainWindow(stopTimes));
@@ -22,11 +21,30 @@ namespace StopWatch
 
     private static void ParseCmdLineArguments(string[] args)
     {
-      string timetableFile = args.Length > 0 ? args[0] : null;
-      if (timetableFile != null)
+      for (int i = 0; i < args.Length - 1; i += 2)
       {
-        Settings.Default.TimetableFile = timetableFile;
+        switch (args[i])
+        {
+          case "-f":
+            Settings.Default.TimetableFile = args[i + 1];
+            break;
+
+          default:
+            HandleInvalidCmdLineArgument(args[i]);
+            break;
+        }
       }
+
+      if ((args.Length % 2) == 1)
+      {
+        HandleInvalidCmdLineArgument(args[args.Length - 1]);
+      }
+    }
+
+    private static void HandleInvalidCmdLineArgument(string arg)
+    {
+      MessageBox.Show("Ignoring unknown command line argument '" + arg + "'.",
+                      "Invalid argument", MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 
     private static StopTimes ParseTimetableFile(string fileName)
