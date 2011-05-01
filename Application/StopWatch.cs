@@ -1,27 +1,31 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using StopWatch.Properties;
 
 namespace StopWatch
 {
   public class StopWatch
   {
-    private const string TIMETABLE_DIR = @"..\..\";
-    private const string TIMETABLE_DEFAULT_FILE = TIMETABLE_DIR + "1310137.html";
-    //private const string TIMETABLE_DEFAULT_FILE = "1434180.html";
-
     [STAThread]
     static void Main(string[] args)
     {
-      string timetableFile = args.Length > 0 ? args[0] : null;
+      ParseCmdLineArguments(args);
 
-      StopTimes stopTimes =
-        ParseTimetableFile((timetableFile != null) ? timetableFile
-                                                   : TIMETABLE_DEFAULT_FILE);
-
+      StopTimes stopTimes = ParseTimetableFile(Settings.Default.TimetableDir +
+                                               Settings.Default.TimetableFile);
       if (stopTimes != null)
       {
         Application.Run(new MainWindow(stopTimes));
+      }
+    }
+
+    private static void ParseCmdLineArguments(string[] args)
+    {
+      string timetableFile = args.Length > 0 ? args[0] : null;
+      if (timetableFile != null)
+      {
+        Settings.Default.TimetableFile = timetableFile;
       }
     }
 
