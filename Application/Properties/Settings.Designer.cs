@@ -48,5 +48,17 @@ namespace StopWatch.Properties {
                 this["TimetableFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StopTimeDelay {
+            get {
+                return ((int)(this["StopTimeDelay"]));
+            }
+            set {
+                this["StopTimeDelay"] = value;
+            }
+        }
     }
 }

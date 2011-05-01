@@ -31,20 +31,34 @@ namespace StopWatch
     {
       for (int i = 0; i < args.Length - 1; i += 2)
       {
-        switch (args[i])
+        string arg = args[i];
+        string value = args[i + 1];
+        switch (arg)
         {
+          case "-d":
+            int delay = 0;
+            if (Int32.TryParse(value, out delay))
+            {
+              Settings.Default.StopTimeDelay = delay;
+            }
+            else
+            {
+              HandleInvalidCmdLineValue(arg, value, "The value is not a valid integer");
+            }
+            break;
+
           case "-e":
             StringCollection excludedBuses = new StringCollection();
-            excludedBuses.AddRange(args[i + 1].Split(','));
+            excludedBuses.AddRange(value.Split(','));
             Settings.Default.ExcludedBuses = excludedBuses;
             break;
 
           case "-f":
-            Settings.Default.TimetableFile = args[i + 1];
+            Settings.Default.TimetableFile = value;
             break;
 
           default:
-            HandleInvalidCmdLineArgument(args[i]);
+            HandleInvalidCmdLineArgument(arg);
             break;
         }
       }
@@ -59,6 +73,14 @@ namespace StopWatch
     {
       MessageBox.Show("Ignoring unknown command line argument '" + arg + "'.",
                       "Invalid argument", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+    }
+
+    private static void HandleInvalidCmdLineValue(string arg, string value, string message)
+    {
+      MessageBox.Show("Ignoring invalid value '" + value +
+                      "' for command line argument '" + arg + "': " +
+                      message + ".",
+                      "Invalid value", MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 
     private static StopTimes ParseTimetableFile(string fileName)

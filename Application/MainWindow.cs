@@ -5,13 +5,13 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using StopWatch.Properties;
 
 namespace StopWatch
 {
   public partial class MainWindow : Form
   {
     private const int STOP_TIME_DEFAULT_COUNT = 5;
-    private const int STOP_TIME_DEFAULT_DELAY_MIN = 5;
 
     private StopTimes mStopTimes;
 
@@ -21,7 +21,7 @@ namespace StopWatch
     private Timer mTimer;
     
     private int mStopTimeCount = STOP_TIME_DEFAULT_COUNT;
-    private int mStopTimeDelayMin = STOP_TIME_DEFAULT_DELAY_MIN;
+    private int mStopTimeDelayMin = Settings.Default.StopTimeDelay;
     private int mLabelHeight;
     private int mLastHeight;
 
@@ -131,8 +131,8 @@ namespace StopWatch
       DateTime nowTime = DateTime.Now;
       mTimeNowLabel.Text = String.Format("Time is {0}", nowTime.ToLongTimeString());
 
-      nowTime = nowTime.AddMinutes(mStopTimeDelayMin);
-      List<StopTime> stops = mStopTimes.GetNextStops(nowTime, mStopTimeCount);
+      DateTime limitTime = nowTime.AddMinutes(mStopTimeDelayMin);
+      List<StopTime> stops = mStopTimes.GetNextStops(limitTime, mStopTimeCount);
       for (int i = 0; i < stops.Count && i < mStopTimesView.Count; ++i)
       {
         mStopTimesView[i][0].Text = String.Format("{0}", stops[i].ToString());
