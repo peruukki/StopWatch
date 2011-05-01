@@ -131,7 +131,7 @@ namespace StopWatch
       DateTime nowTime = DateTime.Now;
       mTimeNowLabel.Text = String.Format("Time is {0}", nowTime.ToLongTimeString());
 
-      nowTime.AddMinutes(mStopTimeDelayMin);
+      nowTime = nowTime.AddMinutes(mStopTimeDelayMin);
       List<StopTime> stops = mStopTimes.GetNextStops(nowTime, mStopTimeCount);
       for (int i = 0; i < stops.Count && i < mStopTimesView.Count; ++i)
       {
