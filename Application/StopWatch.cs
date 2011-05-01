@@ -18,7 +18,10 @@ namespace StopWatch
       {
         foreach (string bus in Settings.Default.ExcludedBuses)
         {
-          stopTimes.ExcludeBus(bus);
+          if (!String.IsNullOrEmpty(bus))
+          {
+            stopTimes.ExcludeBus(bus);
+          }
         }
         Application.Run(new MainWindow(stopTimes));
       }
