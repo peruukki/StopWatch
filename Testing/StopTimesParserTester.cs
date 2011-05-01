@@ -71,5 +71,20 @@ namespace StopWatch
         showSeconds = false;
       }
     }
+
+    [Test]
+    public void Buses()
+    {
+      string[] buses = times.Buses;
+      Console.Write("Buses:");
+      foreach (string bus in buses)
+      {
+        Console.Write(" " + bus);
+        Assert.That("65A".Equals(bus) || "66A".Equals(bus) || "501".Equals(bus) ||
+                    "21V".Equals(bus), Is.True);
+      }
+      Console.WriteLine("");
+      Assert.That(buses.Length, Is.EqualTo(4));
+    }
   }
 }

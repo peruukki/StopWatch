@@ -7,6 +7,7 @@ namespace StopWatch
   public class StopTimes
   {
     private Timetable[] mTimetables = new Timetable[Weekday.Count];
+    private List<string> mBuses = new List<string>();
     private List<string> mExcludedBuses = new List<string>();
 
     public int Count
@@ -22,6 +23,14 @@ namespace StopWatch
       }
     }
 
+    public string[] Buses
+    {
+      get
+      {
+        return mBuses.ToArray();
+      }
+    }
+
     public StopTimes()
     {
       for (int i = 0; i < mTimetables.Length; i++)
@@ -32,6 +41,10 @@ namespace StopWatch
 
     public StopTime Add(Weekday weekDay, int hour, int minute, string bus)
     {
+      if (!mBuses.Contains(bus))
+      {
+        mBuses.Add(bus);
+      }
       return mTimetables[weekDay.Ordinal].Add(hour, minute, bus);
     }
 
@@ -118,6 +131,12 @@ namespace StopWatch
 
     public void ExcludeBus(string bus)
     {
+      if (!mBuses.Contains(bus))
+      {
+        throw new ArgumentOutOfRangeException("bus", "Given bus '" + bus +
+                                              "' has no stops in the timetable");
+      }
+
       if (!mExcludedBuses.Contains(bus))
       {
         mExcludedBuses.Add(bus);
@@ -128,6 +147,12 @@ namespace StopWatch
     {
       if (bus != null)
       {
+        if (!mBuses.Contains(bus))
+        {
+          throw new ArgumentOutOfRangeException("bus", "Given bus '" + bus +
+                                                "' has no stops in the timetable");
+        }
+
         mExcludedBuses.Remove(bus);
       }
       else

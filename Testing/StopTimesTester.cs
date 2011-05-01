@@ -107,5 +107,39 @@ namespace StopWatch
       stopTimes.IncludeBus(null);
       Assert.That(GetNextStops(stopTimes, date, 5, 1).Count, Is.EqualTo(3));
     }
+
+    [Test]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void ExcludeInvalidBus()
+    {
+      stopTimes.ExcludeBus("A");
+    }
+
+    [Test]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void IncludeInvalidBus()
+    {
+      stopTimes.IncludeBus("A");
+    }
+
+    [Test]
+    public void Buses()
+    {
+      DateTime date = DateTime.Now;
+      Weekday weekDay = Weekday.FromDayOfWeek(date.DayOfWeek);
+
+      Assert.That(stopTimes.Buses.Length, Is.EqualTo(0));
+
+      stopTimes.Add(weekDay, 0, 1, "A");
+      Assert.That(stopTimes.Buses.Length, Is.EqualTo(1));
+      stopTimes.Add(weekDay, 21, 36, "A");
+      Assert.That(stopTimes.Buses.Length, Is.EqualTo(1));
+
+      stopTimes.Add(weekDay, 14, 59, "B");
+      Assert.That(stopTimes.Buses.Length, Is.EqualTo(2));
+
+      stopTimes.ExcludeBus("A");
+      Assert.That(stopTimes.Buses.Length, Is.EqualTo(2));
+    }
   }
 }
