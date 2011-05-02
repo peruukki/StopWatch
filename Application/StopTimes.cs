@@ -107,23 +107,15 @@ namespace StopWatch
     {
       List<StopTime> stops = new List<StopTime>(count);
 
-      TimeSpan spanToAdd = TimeSpan.FromMinutes(1);
-      bool addSpan = date.Second > 0;
-      if (addSpan)
+      if (date.Second > 0)
       {
-        date = date.Add(spanToAdd);
+        date = date.Add(TimeSpan.FromMinutes(1));
       }
-
       int index = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;
       if (AddNextStopTimes(stops, mTimetables[index].Get(date.Hour),
                            date.Minute, count) < count)
       {
         AddNextStopTimes(stops, mTimetables[index], date.Hour, count - stops.Count);
-      }
-
-      if (addSpan)
-      {
-        date.Subtract(spanToAdd);
       }
 
       return stops;
