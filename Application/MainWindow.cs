@@ -11,16 +11,14 @@ namespace StopWatch
 {
   public partial class MainWindow : Form
   {
-    private const int STOP_TIME_DEFAULT_COUNT = 5;
-
     private StopTimes mStopTimes;
 
     private Label mTimeNowLabel;
     private List<Label[]> mStopTimesView;
     private Panel mStopTimesPanel;
     private Timer mTimer;
-    
-    private int mStopTimeCount = STOP_TIME_DEFAULT_COUNT;
+
+    private int mStopTimeCount = Settings.Default.StopTimeCount;
     private int mStopTimeDelayMin = Settings.Default.StopTimeDelay;
     private int mLabelHeight;
     private int mLastHeight;

@@ -35,6 +35,18 @@ namespace StopWatch
         string value = args[i + 1];
         switch (arg)
         {
+          case "-c":
+            int count = 0;
+            if (Int32.TryParse(value, out count))
+            {
+              Settings.Default.StopTimeCount = count;
+            }
+            else
+            {
+              HandleInvalidCmdLineValue(arg, value, "The value is not a valid integer");
+            }
+            break;
+
           case "-d":
             int delay = 0;
             if (Int32.TryParse(value, out delay))
