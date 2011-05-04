@@ -67,9 +67,6 @@
     <Compile Include="Weekday.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="1310137.html" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="MainWindow.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainWindow.cs</DependentUpon>

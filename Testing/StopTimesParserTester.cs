@@ -28,7 +28,7 @@ namespace StopWatch
     [Test]
     public void ParseInvalid()
     {
-      times = new StopTimeParser().Parse(@"StopWatch.exe");
+      times = new StopTimeParser().Parse(@"C#\StopWatch\StopWatch.sln");
       Assert.That(times.Count, Is.EqualTo(0));
     }
 
