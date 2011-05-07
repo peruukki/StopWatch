@@ -13,9 +13,7 @@ namespace StopWatch
   {
     private StopTimes mStopTimes;
 
-    private Label mTimeNowLabel;
     private List<Label[]> mStopTimesView;
-    private Panel mStopTimesPanel;
     private Timer mTimer;
 
     private int mStopTimeCount = Settings.Default.StopTimeCount;
@@ -27,8 +25,8 @@ namespace StopWatch
     {
       mStopTimes = stopTimes;
       InitializeComponent();
-      InitializeTimeNowLabel();
       InitializeStopTimesView();
+      InitializeBusView();
     }
 
     private void InitializeTimeNowLabel()
@@ -40,16 +38,7 @@ namespace StopWatch
 
     private void InitializeStopTimesView()
     {
-      TableLayoutPanel stopTimesPanel = new TableLayoutPanel();
-      stopTimesPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Top;
-      stopTimesPanel.Location = new Point(0, 20);
-      stopTimesPanel.AutoSize = true;
-      stopTimesPanel.ColumnCount = 2;
-      Controls.Add(stopTimesPanel);
-      mStopTimesPanel = stopTimesPanel;
-
       CreateStopTimesView();
-
       if (mStopTimesView.Count > 0)
       {
         mLabelHeight = mStopTimesView[0][0].Height + 1;
@@ -95,6 +84,29 @@ namespace StopWatch
         UpdateView();
       }
       UpdateHeight();
+    }
+
+    private void InitializeBusView()
+    {
+      mBusPanel.Controls.Clear();
+      foreach (string bus in mStopTimes.Buses)
+      {
+        CheckBox busButton = new CheckBox();
+        busButton.AutoSize = true;
+        busButton.Text = bus;
+        busButton.Checked = mStopTimes.IsIncluded(bus);
+        busButton.CheckedChanged += new EventHandler(busButton_CheckedChanged);
+
+        mBusPanel.Controls.Add(busButton);
+      }
+    }
+
+    private void busButton_CheckedChanged(object sender, EventArgs e)
+    {
+      CheckBox button = sender as CheckBox;
+      mStopTimes.SetIncluded(button.Text, button.Checked);
+      CreateStopTimesView();
+      UpdateView();
     }
 
     private void CreateStopTimesView()

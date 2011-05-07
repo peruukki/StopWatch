@@ -48,9 +48,26 @@ namespace StopWatch
       return mTimetables[weekDay.Ordinal].Add(hour, minute, bus);
     }
 
+    public bool IsIncluded(string bus)
+    {
+      return !mExcludedBuses.Contains(bus);
+    }
+
+    public void SetIncluded(string bus, bool isIncluded)
+    {
+      if (isIncluded)
+      {
+        IncludeBus(bus);
+      }
+      else
+      {
+        ExcludeBus(bus);
+      }
+    }
+
     private bool IsExcluded(StopTime stopTime)
     {
-      return mExcludedBuses.Contains(stopTime.Bus);
+      return !IsIncluded(stopTime.Bus);
     }
 
     private int AddIncluded(List<StopTimeDifference> destination, List<StopTime> source,
