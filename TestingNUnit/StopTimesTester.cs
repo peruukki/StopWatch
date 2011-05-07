@@ -26,6 +26,11 @@ namespace StopWatch
         Assert.That(stops[i].GetDifference(date),
                     Is.LessThanOrEqualTo(stops[i + 1].GetDifference(date)));
       }
+      if (stops.Count > 0)
+      {
+        Assert.That(stops[0].GetDifference(date),
+                    Is.GreaterThanOrEqualTo(new TimeSpan()));
+      }
     }
 
     [SetUp]

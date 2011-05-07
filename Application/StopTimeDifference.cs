@@ -65,7 +65,7 @@ namespace StopWatch
       else if (obj is DateTime)
       {
         DateTime other = (DateTime)obj;
-        dayDifference = DayDifference;
+        dayDifference = 0;
         hour = other.Hour;
         minute = other.Minute;
       }

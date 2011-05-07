@@ -123,14 +123,16 @@ namespace StopWatch
             {
               date = date.AddDays(1);
             }
-            Timetable table = mTimetables[Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal];
-            remainingCount -= AddIncluded(destination, table.Get(hour), 0, remainingCount,
-                                          dayDifference);
-            hour = (hour + 1) % Timetable.HOURS_IN_DAY;
             if (hour == 0)
             {
               dayDifference++;
             }
+
+            Timetable table = mTimetables[Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal];
+            remainingCount -= AddIncluded(destination, table.Get(hour), 0, remainingCount,
+                                          dayDifference);
+
+            hour = (hour + 1) % Timetable.HOURS_IN_DAY;
           }
         }
         keepAdding = (remainingCount < startCount);

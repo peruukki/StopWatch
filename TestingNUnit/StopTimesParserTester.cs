@@ -43,11 +43,11 @@ namespace StopWatch
     [Test]
     public void GetDifference()
     {
-      DateTime date = new DateTime(2011, 4, 29, 5, 25, 12);
+      DateTime date = new DateTime(2011, 4, 29, 23, 25, 12);
 
       Console.WriteLine("Time is {0}", date);
       List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, date, 5);
-      Assert.That(stops[0].GetDifference(date), Is.EqualTo(new TimeSpan(0, 7, 48)));
+      Assert.That(stops[0].GetDifference(date), Is.EqualTo(new TimeSpan(6, 14, 48)));
 
       bool showSeconds = true;
       foreach (StopTimeDifference stop in stops)
@@ -56,7 +56,7 @@ namespace StopWatch
         showSeconds = false;
         Assert.That(stop.CompareTo(date), Is.GreaterThan(0),
                     "Stop time > current time");
-        Assert.That(stop.DayDifference, Is.EqualTo(0));
+        Assert.That(stop.DayDifference, Is.EqualTo(1));
       }
     }
 
