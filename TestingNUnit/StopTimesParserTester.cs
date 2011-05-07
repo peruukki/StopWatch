@@ -46,14 +46,17 @@ namespace StopWatch
       DateTime date = new DateTime(2011, 4, 29, 5, 25, 12);
 
       Console.WriteLine("Time is {0}", date);
-      List<StopTime> stops = StopTimesTester.GetNextStops(times, date, 5, 0);
+      List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, date, 5);
+      Assert.That(stops[0].GetDifference(date), Is.EqualTo(new TimeSpan(0, 7, 48)));
+
       bool showSeconds = true;
-      foreach (StopTime stop in stops)
+      foreach (StopTimeDifference stop in stops)
       {
         Console.WriteLine("{0} {1}", stop, stop.GetDifference(date, showSeconds));
         showSeconds = false;
         Assert.That(stop.CompareTo(date), Is.GreaterThan(0),
                     "Stop time > current time");
+        Assert.That(stop.DayDifference, Is.EqualTo(0));
       }
     }
 
@@ -63,9 +66,9 @@ namespace StopWatch
       DateTime date = DateTime.Now;
 
       Console.WriteLine("Time is {0}", date);
-      List<StopTime> stops = StopTimesTester.GetNextStops(times, date, 5, 1);
+      List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, date, 5);
       bool showSeconds = true;
-      foreach (StopTime stop in stops)
+      foreach (StopTimeDifference stop in stops)
       {
         Console.WriteLine("{0} {1}", stop, stop.GetDifference(date, showSeconds));
         showSeconds = false;

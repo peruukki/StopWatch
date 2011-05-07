@@ -6,9 +6,9 @@ namespace StopWatch
 {
   public class Weekday
   {
-    public static Weekday Weekdays = new Weekday(0, "Weekdays");
-    public static Weekday Saturday = new Weekday(1, "Saturday");
-    public static Weekday Sunday = new Weekday(2, "Sunday");
+    public static readonly Weekday Weekdays = new Weekday(0, "Weekdays");
+    public static readonly Weekday Saturday = new Weekday(1, "Saturday");
+    public static readonly Weekday Sunday = new Weekday(2, "Sunday");
     public static int Count = 3;
 
     private int mOrdinal;

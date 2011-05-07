@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="TimetableDir" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">C#\StopWatch\Testing\Timetables\</Value>
+      <Value Profile="(Default)">E:\Projects\C#\StopWatch\TestingNUnit\Timetables\</Value>
     </Setting>
   </Settings>
 </SettingsFile>

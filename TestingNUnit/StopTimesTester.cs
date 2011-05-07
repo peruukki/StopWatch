@@ -10,25 +10,22 @@ namespace StopWatch
   {
     StopTimes stopTimes;
 
-    public static List<StopTime> GetNextStops(StopTimes stopTimes, DateTime date,
-                                              int stopCount, int maxDayChanges)
+    public static List<StopTimeDifference> GetNextStops(StopTimes stopTimes, DateTime date,
+                                                        int stopCount)
     {
-      List<StopTime> stops = stopTimes.GetNextStops(date, stopCount);
-      Assert.That(ValidateNextStops(stops, maxDayChanges), Is.True);
+      List<StopTimeDifference> stops = stopTimes.GetNextStops(date, stopCount);
+      ValidateNextStops(stops, date);
       return stops;
     }
 
-    public static bool ValidateNextStops(List<StopTime> stops, int maxDayChanges)
+    public static void ValidateNextStops(List<StopTimeDifference> stops, DateTime date)
     {
-      int dayChangeCount = 0;
       for (int i = 0; i < stops.Count - 1; i++)
       {
-        if (stops[i].CompareTo(stops[i + 1]) > 0)
-        {
-          dayChangeCount++;
-        }
+        Assert.That(stops[i].CompareTo(stops[i + 1]), Is.LessThanOrEqualTo(0));
+        Assert.That(stops[i].GetDifference(date),
+                    Is.LessThanOrEqualTo(stops[i + 1].GetDifference(date)));
       }
-      return dayChangeCount <= maxDayChanges;
     }
 
     [SetUp]
@@ -66,15 +63,15 @@ namespace StopWatch
       Weekday weekDay = Weekday.FromDayOfWeek(date.DayOfWeek);
 
       stopTimes.Add(weekDay, 0, 0, "A");
-      Assert.That(GetNextStops(stopTimes, date, 0, 1).Count, Is.EqualTo(0));
-      Assert.That(GetNextStops(stopTimes, date, 1, 1).Count, Is.EqualTo(1));
-      Assert.That(GetNextStops(stopTimes, date, 2, 1).Count, Is.EqualTo(1));
+      Assert.That(GetNextStops(stopTimes, date, 0).Count, Is.EqualTo(0));
+      Assert.That(GetNextStops(stopTimes, date, 1).Count, Is.EqualTo(1));
+      Assert.That(GetNextStops(stopTimes, date, 2).Count, Is.EqualTo(2));
       stopTimes.Add(weekDay, 2, 7, "B");
       stopTimes.Add(weekDay, 2, 7, "C");
-      Assert.That(GetNextStops(stopTimes, date, 2, 1).Count, Is.EqualTo(2));
-      Assert.That(GetNextStops(stopTimes, date, 3, 1).Count, Is.EqualTo(3));
+      Assert.That(GetNextStops(stopTimes, date, 2).Count, Is.EqualTo(2));
+      Assert.That(GetNextStops(stopTimes, date, 3).Count, Is.EqualTo(3));
 
-      List<StopTime> stops = GetNextStops(stopTimes, date, 1, 1);
+      List<StopTimeDifference> stops = GetNextStops(stopTimes, date, 1);
       Assert.That(stops.Count, Is.EqualTo(1));
       Console.WriteLine("Time is " + date + ", next stop " + stops[0]);
     }
@@ -84,28 +81,29 @@ namespace StopWatch
     {
       DateTime date = DateTime.Now;
       Weekday weekDay = Weekday.FromDayOfWeek(date.DayOfWeek);
+      int stopCount = 5;
 
       stopTimes.Add(weekDay, 0, 1, "A");
-      Assert.That(GetNextStops(stopTimes, date, 5, 1).Count, Is.EqualTo(1));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(stopCount));
       stopTimes.ExcludeBus("A");
-      Assert.That(GetNextStops(stopTimes, date, 5, 0).Count, Is.EqualTo(0));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(0));
       stopTimes.IncludeBus("A");
-      Assert.That(GetNextStops(stopTimes, date, 5, 1).Count, Is.EqualTo(1));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(stopCount));
 
       stopTimes.Add(weekDay, 21, 36, "A");
       stopTimes.ExcludeBus("A");
-      Assert.That(GetNextStops(stopTimes, date, 5, 0).Count, Is.EqualTo(0));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(0));
       stopTimes.IncludeBus(null);
-      Assert.That(GetNextStops(stopTimes, date, 5, 1).Count, Is.EqualTo(2));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(stopCount));
 
       stopTimes.Add(weekDay, 14, 59, "B");
-      Assert.That(GetNextStops(stopTimes, date, 5, 1).Count, Is.EqualTo(3));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(stopCount));
       stopTimes.ExcludeBus("A");
-      Assert.That(GetNextStops(stopTimes, date, 5, 1).Count, Is.EqualTo(1));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(stopCount));
       stopTimes.ExcludeBus("B");
-      Assert.That(GetNextStops(stopTimes, date, 5, 0).Count, Is.EqualTo(0));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(0));
       stopTimes.IncludeBus(null);
-      Assert.That(GetNextStops(stopTimes, date, 5, 1).Count, Is.EqualTo(3));
+      Assert.That(GetNextStops(stopTimes, date, stopCount).Count, Is.EqualTo(stopCount));
     }
 
     [Test]
@@ -140,6 +138,32 @@ namespace StopWatch
 
       stopTimes.ExcludeBus("A");
       Assert.That(stopTimes.Buses.Length, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ChangingDays()
+    {
+      // Add stop from each weekday
+      for (int i = 0; i < Weekday.Count; i++)
+      {
+        StopTime stop = stopTimes.Add(Weekday.FromOrdinal(i), i, i, "A");
+        Console.WriteLine("Added stop " + stop);
+      }
+
+      // Verify that stops from successive weekdays are returned
+      DateTime date = DateTime.Now;
+      int dayCount = 10;
+      Console.WriteLine("Time is " + date);
+      List<StopTimeDifference> stops = GetNextStops(stopTimes, date, dayCount);
+      Assert.That(stops.Count, Is.EqualTo(dayCount));
+      foreach (StopTimeDifference stop in stops)
+      {
+        Console.WriteLine("Retrieved stop " + stop + " " + stop.GetDifference(date, false));
+        int weekdayOrdinal = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;
+        Assert.That(stop.Hour, Is.EqualTo(weekdayOrdinal));
+        Assert.That(stop.Minute, Is.EqualTo(weekdayOrdinal));
+        date = date.AddDays(1);
+      }
     }
   }
 }

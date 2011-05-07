@@ -53,23 +53,23 @@ namespace StopWatch
       return mExcludedBuses.Contains(stopTime.Bus);
     }
 
-    private int AddIncluded(List<StopTime> destination, List<StopTime> source,
-                            int startIndex, int count)
+    private int AddIncluded(List<StopTimeDifference> destination, List<StopTime> source,
+                            int startIndex, int count, int dayDifference)
     {
       int addCount = 0;
       for (int i = startIndex; i < source.Count && addCount < count; i++)
       {
         if (!IsExcluded(source[i]))
         {
-          destination.Add(source[i]);
+          destination.Add(new StopTimeDifference(source[i], dayDifference));
           addCount++;
         }
       }
       return addCount;
     }
 
-    private int AddNextStopTimes(List<StopTime> destination, List<StopTime> source,
-                                 int minutes, int count)
+    private int AddNextStopTimes(List<StopTimeDifference> destination,
+                                 List<StopTime> source, int minutes, int count)
     {
       int addCount = 0;
 
@@ -81,41 +81,60 @@ namespace StopWatch
       }
       if (index < source.Count)
       {
-        addCount = AddIncluded(destination, source, index, count);
+        addCount = AddIncluded(destination, source, index, count, 0);
       }
 
       return addCount;
     }
 
-    private int AddNextStopTimes(List<StopTime> destination, Timetable source,
-                                 int hour, int count)
+    private int AddNextStopTimes(List<StopTimeDifference> destination, DateTime date,
+                                 int count)
     {
       int remainingCount = count;
+      int dayDifference = 0;
+      bool keepAdding = true;
 
-      int endIndex = hour;
-      for (hour = (hour + 1) % Timetable.HOURS_IN_DAY;
-           remainingCount > 0 && hour != endIndex;
-           hour = (hour + 1) % Timetable.HOURS_IN_DAY)
+      while (keepAdding)
       {
-        remainingCount -= AddIncluded(destination, source.Get(hour), 0, remainingCount);
+        int startCount = remainingCount;
+        for (int i = 0; (remainingCount > 0) && (i < Timetable.DAYS_IN_WEEK); i++)
+        {
+          int hour = (date.Hour + 1) % Timetable.HOURS_IN_DAY;
+          for (int j = 0; (remainingCount > 0) && (j < Timetable.HOURS_IN_DAY); j++)
+          {
+            if (hour == Timetable.FIRST_HOUR_OF_DAY)
+            {
+              date = date.AddDays(1);
+            }
+            Timetable table = mTimetables[Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal];
+            remainingCount -= AddIncluded(destination, table.Get(hour), 0, remainingCount,
+                                          dayDifference);
+            hour = (hour + 1) % Timetable.HOURS_IN_DAY;
+            if (hour == 0)
+            {
+              dayDifference++;
+            }
+          }
+        }
+        keepAdding = (remainingCount < startCount);
       }
 
       return count - remainingCount;
     }
 
-    public List<StopTime> GetNextStops(DateTime date, int count)
+    public List<StopTimeDifference> GetNextStops(DateTime date, int count)
     {
-      List<StopTime> stops = new List<StopTime>(count);
+      List<StopTimeDifference> stops = new List<StopTimeDifference>(count);
 
       if (date.Second > 0)
       {
         date = date.Add(TimeSpan.FromMinutes(1));
       }
-      int index = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;
-      if (AddNextStopTimes(stops, mTimetables[index].Get(date.Hour),
+      int weekdayIndex = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;
+      if (AddNextStopTimes(stops, mTimetables[weekdayIndex].Get(date.Hour),
                            date.Minute, count) < count)
       {
-        AddNextStopTimes(stops, mTimetables[index], date.Hour, count - stops.Count);
+        AddNextStopTimes(stops, date, count - stops.Count);
       }
 
       return stops;

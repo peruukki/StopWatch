@@ -6,8 +6,10 @@ namespace StopWatch
 {
   public class Timetable
   {
-    public static int HOURS_IN_DAY = 24;
-    public static int MINUTES_IN_HOUR = 60;
+    public static readonly int DAYS_IN_WEEK = 7;
+    public static readonly int HOURS_IN_DAY = 24;
+    public static readonly int MINUTES_IN_HOUR = 60;
+    public static readonly int FIRST_HOUR_OF_DAY = 5;
 
     private List<StopTime>[] mStopTimes = new List<StopTime>[HOURS_IN_DAY];
     private string mTitle;
