@@ -23,6 +23,7 @@ namespace StopWatch
             stopTimes.ExcludeBus(bus);
           }
         }
+        Application.EnableVisualStyles();
         Application.Run(new MainWindow(stopTimes));
       }
     }
