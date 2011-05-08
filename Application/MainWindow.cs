@@ -27,6 +27,7 @@ namespace StopWatch
       InitializeComponent();
       InitializeStopTimesView();
       InitializeBusView();
+      mStopDelayChooser.Value = mStopTimeDelayMin;
     }
 
     private void InitializeTimeNowLabel()
@@ -154,6 +155,11 @@ namespace StopWatch
     private void mTimer_Tick(object sender, EventArgs e)
     {
       UpdateView();
+    }
+
+    private void mStopDelayChooser_ValueChanged(object sender, EventArgs e)
+    {
+      mStopTimeDelayMin = (int)(sender as NumericUpDown).Value;
     }
   }
 }
