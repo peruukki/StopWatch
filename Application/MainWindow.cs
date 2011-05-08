@@ -64,6 +64,7 @@ namespace StopWatch
       mTimeNowLabel.Focus();
       mTimeNowLabel.Update();
       UpdateHeight();
+      MinimumSize = new Size(Width, MinimumSize.Height);
 
       InitializeTimer();
       ResizeEnd += new System.EventHandler(this.MainWindow_Resize);

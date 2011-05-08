@@ -36,15 +36,15 @@ namespace StopWatch
       this.mStopDelayChooser = new System.Windows.Forms.NumericUpDown();
       this.mDelayLabelText = new System.Windows.Forms.Label();
       this.mTimeNowPanel = new System.Windows.Forms.Panel();
+      this.mStopDelayPanel = new System.Windows.Forms.Panel();
       ((System.ComponentModel.ISupportInitialize)(this.mStopDelayChooser)).BeginInit();
       this.mTimeNowPanel.SuspendLayout();
+      this.mStopDelayPanel.SuspendLayout();
       this.SuspendLayout();
       // 
       // mStopTimesPanel
       // 
-      this.mStopTimesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)));
-      this.mStopTimesPanel.AutoSize = true;
+      this.mStopTimesPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
       this.mStopTimesPanel.ColumnCount = 2;
       this.mStopTimesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
       this.mStopTimesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -57,8 +57,7 @@ namespace StopWatch
       // 
       // mBusPanel
       // 
-      this.mBusPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.mBusPanel.Anchor = System.Windows.Forms.AnchorStyles.Top;
       this.mBusPanel.Location = new System.Drawing.Point(0, 0);
       this.mBusPanel.Name = "mBusPanel";
       this.mBusPanel.Size = new System.Drawing.Size(160, 50);
@@ -66,6 +65,7 @@ namespace StopWatch
       // 
       // mTimeNowLabel
       // 
+      this.mTimeNowLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
       this.mTimeNowLabel.AutoSize = true;
       this.mTimeNowLabel.Location = new System.Drawing.Point(3, 6);
       this.mTimeNowLabel.Name = "mTimeNowLabel";
@@ -75,7 +75,8 @@ namespace StopWatch
       // 
       // mStopDelayChooser
       // 
-      this.mStopDelayChooser.Location = new System.Drawing.Point(113, 54);
+      this.mStopDelayChooser.Anchor = System.Windows.Forms.AnchorStyles.Top;
+      this.mStopDelayChooser.Location = new System.Drawing.Point(113, 4);
       this.mStopDelayChooser.Maximum = new decimal(new int[] {
             999,
             0,
@@ -89,8 +90,9 @@ namespace StopWatch
       // 
       // mDelayLabelText
       // 
+      this.mDelayLabelText.Anchor = System.Windows.Forms.AnchorStyles.Top;
       this.mDelayLabelText.AutoSize = true;
-      this.mDelayLabelText.Location = new System.Drawing.Point(3, 56);
+      this.mDelayLabelText.Location = new System.Drawing.Point(3, 6);
       this.mDelayLabelText.Name = "mDelayLabelText";
       this.mDelayLabelText.Size = new System.Drawing.Size(109, 17);
       this.mDelayLabelText.TabIndex = 2;
@@ -98,6 +100,8 @@ namespace StopWatch
       // 
       // mTimeNowPanel
       // 
+      this.mTimeNowPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
       this.mTimeNowPanel.BackColor = System.Drawing.SystemColors.ControlDark;
       this.mTimeNowPanel.Controls.Add(this.mTimeNowLabel);
       this.mTimeNowPanel.Location = new System.Drawing.Point(0, 83);
@@ -105,14 +109,24 @@ namespace StopWatch
       this.mTimeNowPanel.Size = new System.Drawing.Size(160, 30);
       this.mTimeNowPanel.TabIndex = 3;
       // 
+      // mStopDelayPanel
+      // 
+      this.mStopDelayPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.mStopDelayPanel.Controls.Add(this.mDelayLabelText);
+      this.mStopDelayPanel.Controls.Add(this.mStopDelayChooser);
+      this.mStopDelayPanel.Location = new System.Drawing.Point(0, 50);
+      this.mStopDelayPanel.Name = "mStopDelayPanel";
+      this.mStopDelayPanel.Size = new System.Drawing.Size(160, 32);
+      this.mStopDelayPanel.TabIndex = 0;
+      // 
       // MainWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
       this.ClientSize = new System.Drawing.Size(160, 267);
+      this.Controls.Add(this.mStopDelayPanel);
       this.Controls.Add(this.mTimeNowPanel);
-      this.Controls.Add(this.mDelayLabelText);
-      this.Controls.Add(this.mStopDelayChooser);
       this.Controls.Add(this.mBusPanel);
       this.Controls.Add(this.mStopTimesPanel);
       this.Font = new System.Drawing.Font("Tahoma", 10F);
@@ -124,8 +138,9 @@ namespace StopWatch
       ((System.ComponentModel.ISupportInitialize)(this.mStopDelayChooser)).EndInit();
       this.mTimeNowPanel.ResumeLayout(false);
       this.mTimeNowPanel.PerformLayout();
+      this.mStopDelayPanel.ResumeLayout(false);
+      this.mStopDelayPanel.PerformLayout();
       this.ResumeLayout(false);
-      this.PerformLayout();
 
     }
 
@@ -137,5 +152,6 @@ namespace StopWatch
     private NumericUpDown mStopDelayChooser;
     private Label mDelayLabelText;
     private Panel mTimeNowPanel;
+    private Panel mStopDelayPanel;
   }
 }
