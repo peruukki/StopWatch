@@ -52,36 +52,33 @@ namespace StopWatch
     {
       int result;
 
-      int dayDifference;
-      int hour;
-      int minute;
       if (obj is StopTimeDifference)
       {
-        StopTimeDifference other = (StopTimeDifference)obj;
-        dayDifference = other.DayDifference;
-        hour = other.Hour;
-        minute = other.Minute;
+        StopTimeDifference other = obj as StopTimeDifference;
+        if (DayDifference != other.DayDifference)
+        {
+          result = DayDifference - other.DayDifference;
+        }
+        else
+        {
+          result = mStopTime.CompareTo(other.mStopTime);
+        }
       }
       else if (obj is DateTime)
       {
         DateTime other = (DateTime)obj;
-        dayDifference = 0;
-        hour = other.Hour;
-        minute = other.Minute;
+        if (DayDifference > 0)
+        {
+          result = DayDifference;
+        }
+        else
+        {
+          result = mStopTime.CompareTo(other);
+        }
       }
       else
       {
         throw new ArgumentException(GetType() + " is not comparable to " + obj.GetType());
-      }
-
-      result = DayDifference - dayDifference;
-      if (result == 0)
-      {
-        result = Hour - hour;
-      }
-      if (result == 0)
-      {
-        result = Minute - minute;
       }
 
       return result;

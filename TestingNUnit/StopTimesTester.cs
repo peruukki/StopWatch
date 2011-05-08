@@ -30,7 +30,7 @@ namespace StopWatchNUnitTester
       if (stops.Count > 0)
       {
         Assert.That(stops[0].GetDifference(date),
-                    Is.GreaterThanOrEqualTo(new TimeSpan()));
+                    Is.GreaterThanOrEqualTo(TimeSpan.Zero));
       }
     }
 

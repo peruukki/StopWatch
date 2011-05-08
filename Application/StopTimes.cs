@@ -86,9 +86,15 @@ namespace StopWatch
     }
 
     private int AddNextStopTimes(List<StopTimeDifference> destination,
-                                 List<StopTime> source, int minutes, int count)
+                                 List<StopTime> source, DateTime date, int count)
     {
       int addCount = 0;
+
+      int minutes = date.Minute;
+      if (date.Second > 0)
+      {
+        minutes++;
+      }
 
       int index = 0;
       while (index < source.Count && (minutes > source[index].Minute ||
@@ -145,13 +151,9 @@ namespace StopWatch
     {
       List<StopTimeDifference> stops = new List<StopTimeDifference>(count);
 
-      if (date.Second > 0)
-      {
-        date = date.Add(TimeSpan.FromMinutes(1));
-      }
       int weekdayIndex = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;
-      if (AddNextStopTimes(stops, mTimetables[weekdayIndex].Get(date.Hour),
-                           date.Minute, count) < count)
+      if (AddNextStopTimes(stops, mTimetables[weekdayIndex].Get(date.Hour), date,
+                           count) < count)
       {
         AddNextStopTimes(stops, date, count - stops.Count);
       }

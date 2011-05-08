@@ -41,13 +41,34 @@ namespace StopWatchNUnitTester
     }
 
     [Test]
-    public void GetDifference()
+    public void GetDifferenceLastHourOfDay()
     {
-      DateTime date = new DateTime(2011, 4, 29, 23, 25, 12);
+      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 25, 12),
+                        new TimeSpan(6, 14, 48), 1);
+    }
 
+    [Test]
+    public void GetDifferenceLastMinuteOfDay()
+    {
+      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 59, 12),
+                        new TimeSpan(5, 40, 48), 1);
+    }
+
+    [Test]
+    public void GetDifferenceNow()
+    {
+      GetDifferenceFrom(DateTime.Now, TimeSpan.Zero, -1);
+    }
+
+    private void GetDifferenceFrom(DateTime date, TimeSpan expectedDifference,
+                                   int expectedDayDifference)
+    {
       Console.WriteLine("Time is {0}", date);
       List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, date, 5);
-      Assert.That(stops[0].GetDifference(date), Is.EqualTo(new TimeSpan(6, 14, 48)));
+      if (expectedDifference != TimeSpan.Zero)
+      {
+        Assert.That(stops[0].GetDifference(date), Is.EqualTo(expectedDifference));
+      }
 
       bool showSeconds = true;
       foreach (StopTimeDifference stop in stops)
@@ -56,22 +77,10 @@ namespace StopWatchNUnitTester
         showSeconds = false;
         Assert.That(stop.CompareTo(date), Is.GreaterThan(0),
                     "Stop time > current time");
-        Assert.That(stop.DayDifference, Is.EqualTo(1));
-      }
-    }
-
-    [Test]
-    public void GetDifferenceNow()
-    {
-      DateTime date = DateTime.Now;
-
-      Console.WriteLine("Time is {0}", date);
-      List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, date, 5);
-      bool showSeconds = true;
-      foreach (StopTimeDifference stop in stops)
-      {
-        Console.WriteLine("{0} {1}", stop, stop.GetDifference(date, showSeconds));
-        showSeconds = false;
+        if (expectedDayDifference != -1)
+        {
+          Assert.That(stop.DayDifference, Is.EqualTo(expectedDayDifference));
+        }
       }
     }
 
