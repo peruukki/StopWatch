@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using StopWatch;
-using StopWatchTester.Properties;
+using StopWatchNUnitTester.Properties;
 
-namespace StopWatch
+namespace StopWatchNUnitTester
 {
   [TestFixture]
   public class StopTimesParserTester

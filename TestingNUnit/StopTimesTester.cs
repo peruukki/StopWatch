@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using StopWatch;
 
-namespace StopWatch
+namespace StopWatchNUnitTester
 {
   [TestFixture]
   public class StopTimesTester

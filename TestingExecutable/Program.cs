@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using StopWatch;
+using StopWatchNUnitTester;
 
-namespace StopWatch
+namespace StopWatchExecutableTester
 {
   class Program
   {
