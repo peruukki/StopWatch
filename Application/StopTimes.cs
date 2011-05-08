@@ -86,7 +86,8 @@ namespace StopWatch
     }
 
     private int AddNextStopTimes(List<StopTimeDifference> destination,
-                                 List<StopTime> source, DateTime date, int count)
+                                 List<StopTime> source, DateTime date,
+                                 int dayDifference, int count)
     {
       int addCount = 0;
 
@@ -104,17 +105,16 @@ namespace StopWatch
       }
       if (index < source.Count)
       {
-        addCount = AddIncluded(destination, source, index, count, 0);
+        addCount = AddIncluded(destination, source, index, count, dayDifference);
       }
 
       return addCount;
     }
 
     private int AddNextStopTimes(List<StopTimeDifference> destination, DateTime date,
-                                 int count)
+                                 int dayDifference, int count)
     {
       int remainingCount = count;
-      int dayDifference = 0;
       bool keepAdding = true;
 
       while (keepAdding)
@@ -147,18 +147,41 @@ namespace StopWatch
       return count - remainingCount;
     }
 
-    public List<StopTimeDifference> GetNextStops(DateTime date, int count)
+    public List<StopTimeDifference> GetNextStops(DateTime date, int stopTimeDelay,
+                                                 int count)
     {
       List<StopTimeDifference> stops = new List<StopTimeDifference>(count);
 
+      int dayDifference = GetDayDifference(date, stopTimeDelay);
+      date = date.AddMinutes(stopTimeDelay);
+
       int weekdayIndex = Weekday.FromDayOfWeek(date.DayOfWeek).Ordinal;
       if (AddNextStopTimes(stops, mTimetables[weekdayIndex].Get(date.Hour), date,
-                           count) < count)
+                           dayDifference, count) < count)
       {
-        AddNextStopTimes(stops, date, count - stops.Count);
+        AddNextStopTimes(stops, date, dayDifference, count - stops.Count);
       }
 
       return stops;
+    }
+
+    private int GetDayDifference(DateTime date, int delayInMinutes)
+    {
+      int dayDifference;
+
+      int minutesInDay = Timetable.MINUTES_IN_HOUR * Timetable.HOURS_IN_DAY;
+
+      // Add full days
+      dayDifference = delayInMinutes / minutesInDay;
+
+      // Add one day if remaining minutes cause the day to change
+      DateTime delayedDate = date.AddMinutes(delayInMinutes % minutesInDay);
+      if (delayedDate.Day != date.Day)
+      {
+        dayDifference++;
+      }
+
+      return dayDifference;
     }
 
     public void ExcludeBus(string bus)

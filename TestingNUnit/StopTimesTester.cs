@@ -14,7 +14,14 @@ namespace StopWatchNUnitTester
     public static List<StopTimeDifference> GetNextStops(StopTimes stopTimes, DateTime date,
                                                         int stopCount)
     {
-      List<StopTimeDifference> stops = stopTimes.GetNextStops(date, stopCount);
+      return GetNextStops(stopTimes, date, 0, stopCount);
+    }
+
+    public static List<StopTimeDifference> GetNextStops(StopTimes stopTimes, DateTime date,
+                                                        int stopTimeDelay, int stopCount)
+    {
+      List<StopTimeDifference> stops = stopTimes.GetNextStops(date, stopTimeDelay,
+                                                              stopCount);
       ValidateNextStops(stops, date);
       return stops;
     }

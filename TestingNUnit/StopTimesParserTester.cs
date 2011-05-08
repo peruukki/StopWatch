@@ -43,28 +43,39 @@ namespace StopWatchNUnitTester
     [Test]
     public void GetDifferenceLastHourOfDay()
     {
-      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 25, 12),
+      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 25, 12), 0,
                         new TimeSpan(6, 14, 48), 1);
     }
 
     [Test]
     public void GetDifferenceLastMinuteOfDay()
     {
-      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 59, 12),
+      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 59, 12), 0,
                         new TimeSpan(5, 40, 48), 1);
     }
 
     [Test]
     public void GetDifferenceNow()
     {
-      GetDifferenceFrom(DateTime.Now, TimeSpan.Zero, -1);
+      GetDifferenceFrom(DateTime.Now, 0, TimeSpan.Zero, -1);
     }
 
-    private void GetDifferenceFrom(DateTime date, TimeSpan expectedDifference,
-                                   int expectedDayDifference)
+    [Test]
+    public void GetDifferenceWithDelays()
     {
-      Console.WriteLine("Time is {0}", date);
-      List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, date, 5);
+      DateTime nowTime = DateTime.Now;
+      GetDifferenceFrom(nowTime, 5, TimeSpan.Zero, -1);
+      GetDifferenceFrom(nowTime, 84, TimeSpan.Zero, -1);
+      GetDifferenceFrom(nowTime, 380, TimeSpan.Zero, -1);
+      GetDifferenceFrom(nowTime, 1023, TimeSpan.Zero, -1);
+    }
+
+    private void GetDifferenceFrom(DateTime date, int stopTimeDelay,
+                                   TimeSpan expectedDifference, int expectedDayDifference)
+    {
+      Console.WriteLine("Time is {0}, delay is {1} s", date, stopTimeDelay);
+      List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, date,
+                                                                    stopTimeDelay, 5);
       if (expectedDifference != TimeSpan.Zero)
       {
         Assert.That(stops[0].GetDifference(date), Is.EqualTo(expectedDifference));
@@ -81,6 +92,22 @@ namespace StopWatchNUnitTester
         {
           Assert.That(stop.DayDifference, Is.EqualTo(expectedDayDifference));
         }
+      }
+    }
+
+    private void GetDifferenceWithDelay(DateTime nowTime, int stopTimeDelay)
+    {
+      Console.WriteLine("Time is {0}, stop time delay is {1}", nowTime.ToLongTimeString(),
+                        stopTimeDelay);
+
+      DateTime limitTime = nowTime.AddMinutes(stopTimeDelay);
+      List<StopTimeDifference> stops = StopTimesTester.GetNextStops(times, limitTime, 3);
+      for (int i = 0; i < stops.Count; ++i)
+      {
+        Console.WriteLine("{0} {1}", stops[i].ToString(),
+                          stops[i].GetDifference(nowTime, i == 0));
+        Assert.That(stops[0].GetDifference(nowTime),
+                    Is.GreaterThanOrEqualTo(TimeSpan.Zero));
       }
     }
 
