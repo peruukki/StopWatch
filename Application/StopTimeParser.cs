@@ -45,7 +45,7 @@ namespace StopWatch
         rootNode = ParseTimetable(timeTable, sw);
       }
       sw.Flush();
-      Log(sw.ToString());
+      //Log(sw.ToString());
       return mStopTimes;
     }
 
