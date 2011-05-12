@@ -125,5 +125,11 @@ namespace StopWatchNUnitTester
       Console.WriteLine("");
       Assert.That(buses.Length, Is.EqualTo(4));
     }
+
+    [Test]
+    public void StopName()
+    {
+      Assert.That(times.StopName, Is.EqualTo("Melkonkuja"));
+    }
   }
 }

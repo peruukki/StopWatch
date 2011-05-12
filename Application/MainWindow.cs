@@ -50,8 +50,8 @@ namespace StopWatch
 
     public MainWindow(StopTimes stopTimes)
     {
-      mStopTimes = stopTimes;
       InitializeComponent();
+      SetStopTimes(stopTimes);
       InitializeContent();
       mStopDelayChooser.Value = mStopTimeDelayMin;
     }
@@ -60,13 +60,6 @@ namespace StopWatch
     {
       InitializeStopTimesView();
       InitializeBusView();
-    }
-
-    private void InitializeTimeNowLabel()
-    {
-      mTimeNowLabel = new Label();
-      mTimeNowLabel.AutoSize = true;
-      Controls.Add(mTimeNowLabel);
     }
 
     private void InitializeStopTimesView()
@@ -162,6 +155,12 @@ namespace StopWatch
       }
     }
 
+    private void SetStopTimes(StopTimes stopTimes)
+    {
+      mStopTimes = stopTimes;
+      mStopNameLabel.Text = stopTimes.StopName;
+    }
+
     private void UpdateHeight()
     {
       int height = (mStopTimesPanel.Top + mStopTimesPanel.Padding.Vertical) +
@@ -205,7 +204,7 @@ namespace StopWatch
       StopTimes stopTimes = ParseTimetableFile((sender as OpenFileDialog).FileName);
       if (stopTimes != null)
       {
-        mStopTimes = stopTimes;
+        SetStopTimes(stopTimes);
         InitializeContent();
         UpdateView();
       }

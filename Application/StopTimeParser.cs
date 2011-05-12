@@ -30,6 +30,7 @@ namespace StopWatch
     private const string TITLE_SUNDAY = "Sunnuntaisin";
     private const string HOUR_PREVIOUS = "&nbsp;";
     private const string BUS_PREFIX = "&#47;";
+    private const string STOP_NAME_PREFIX = "HSL - Aikataulut - ";
 
     public StopTimes Parse(string path)
     {
@@ -38,6 +39,8 @@ namespace StopWatch
 
       StringWriter sw = new StringWriter();
       HtmlNode rootNode = doc.DocumentNode;
+
+      mStopTimes.StopName = GetStopName(rootNode, sw);
       for (HtmlNode timeTable = FindTimetable(rootNode, sw);
            timeTable != null;
            timeTable = FindTimetable(rootNode, sw))
@@ -55,6 +58,28 @@ namespace StopWatch
       writer.Write(content);
       writer.Flush();
       writer.Close();
+    }
+
+    private string GetStopName(HtmlNode node, TextWriter outText)
+    {
+      string stopName = null;
+      if (HtmlNodeType.Element.Equals(node.NodeType) &&
+          "title".Equals(node.Name))
+      {
+        stopName = ParseStopName(node.InnerText);
+      }
+      else
+      {
+        foreach (HtmlNode subnode in node.ChildNodes)
+        {
+          stopName = GetStopName(subnode, outText);
+          if (stopName != null)
+          {
+            return stopName;
+          }
+        }
+      }
+      return stopName;
     }
 
     private HtmlNode FindTimetable(HtmlNode node, TextWriter outText)
@@ -169,6 +194,11 @@ namespace StopWatch
     private static string ParseBus(string text)
     {
       return text.Replace(BUS_PREFIX, "");
+    }
+
+    private static string ParseStopName(string text)
+    {
+      return text.Replace(STOP_NAME_PREFIX, "").Trim();
     }
 
     private void ParseRowNode(HtmlNode node, TextWriter outText)

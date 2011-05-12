@@ -9,6 +9,7 @@ namespace StopWatch
     private Timetable[] mTimetables = new Timetable[Weekday.Count];
     private List<string> mBuses = new List<string>();
     private List<string> mExcludedBuses = new List<string>();
+    private string mStopName;
 
     public int Count
     {
@@ -25,10 +26,13 @@ namespace StopWatch
 
     public string[] Buses
     {
-      get
-      {
-        return mBuses.ToArray();
-      }
+      get { return mBuses.ToArray(); }
+    }
+
+    public string StopName
+    {
+      get { return mStopName; }
+      set { mStopName = value; }
     }
 
     public StopTimes()
