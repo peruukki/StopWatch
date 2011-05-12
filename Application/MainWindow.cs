@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using StopWatch.Properties;
+using System.IO;
 
 namespace StopWatch
 {
@@ -21,13 +22,44 @@ namespace StopWatch
     private int mLabelHeight;
     private int mLastHeight;
 
+    public static StopTimes ParseTimetableFile(string fileName)
+    {
+      StopTimes stopTimes = null;
+
+      try
+      {
+        stopTimes = new StopTimeParser().Parse(fileName);
+      }
+      catch (FileNotFoundException)
+      {
+        MessageBox.Show(String.Format("The timetable file '{0}' doesn't exist.",
+                                      fileName),
+                        "Invalid file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      }
+
+      if (stopTimes != null && stopTimes.Count == 0)
+      {
+        MessageBox.Show(String.Format("Couldn't find timetable information from file '{0}'.",
+                                      fileName),
+                        "Invalid file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        stopTimes = null;
+      }
+
+      return stopTimes;
+    }
+
     public MainWindow(StopTimes stopTimes)
     {
       mStopTimes = stopTimes;
       InitializeComponent();
+      InitializeContent();
+      mStopDelayChooser.Value = mStopTimeDelayMin;
+    }
+
+    private void InitializeContent()
+    {
       InitializeStopTimesView();
       InitializeBusView();
-      mStopDelayChooser.Value = mStopTimeDelayMin;
     }
 
     private void InitializeTimeNowLabel()
@@ -161,6 +193,22 @@ namespace StopWatch
     private void mStopDelayChooser_ValueChanged(object sender, EventArgs e)
     {
       mStopTimeDelayMin = (int)(sender as NumericUpDown).Value;
+    }
+
+    private void mButtonOpenFile_Click(object sender, EventArgs e)
+    {
+      mOpenFileDialog.ShowDialog();
+    }
+
+    private void mOpenFileDialog_FileOk(object sender, CancelEventArgs e)
+    {
+      StopTimes stopTimes = ParseTimetableFile((sender as OpenFileDialog).FileName);
+      if (stopTimes != null)
+      {
+        mStopTimes = stopTimes;
+        InitializeContent();
+        UpdateView();
+      }
     }
   }
 }

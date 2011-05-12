@@ -37,6 +37,8 @@ namespace StopWatch
       this.mDelayLabelText = new System.Windows.Forms.Label();
       this.mTimeNowPanel = new System.Windows.Forms.Panel();
       this.mStopDelayPanel = new System.Windows.Forms.Panel();
+      this.mOpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+      this.mButtonOpenFile = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.mStopDelayChooser)).BeginInit();
       this.mTimeNowPanel.SuspendLayout();
       this.mStopDelayPanel.SuspendLayout();
@@ -48,20 +50,22 @@ namespace StopWatch
       this.mStopTimesPanel.ColumnCount = 2;
       this.mStopTimesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
       this.mStopTimesPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-      this.mStopTimesPanel.Location = new System.Drawing.Point(0, 120);
+      this.mStopTimesPanel.Location = new System.Drawing.Point(0, 159);
       this.mStopTimesPanel.Name = "mStopTimesPanel";
       this.mStopTimesPanel.RowCount = 1;
       this.mStopTimesPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.mStopTimesPanel.Size = new System.Drawing.Size(160, 150);
+      this.mStopTimesPanel.Size = new System.Drawing.Size(160, 160);
       this.mStopTimesPanel.TabIndex = 0;
       // 
       // mBusPanel
       // 
       this.mBusPanel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-      this.mBusPanel.Location = new System.Drawing.Point(0, 0);
+      this.mBusPanel.Location = new System.Drawing.Point(0, 40);
       this.mBusPanel.Name = "mBusPanel";
+      this.mBusPanel.Padding = new System.Windows.Forms.Padding(2, 0, 0, 0);
       this.mBusPanel.Size = new System.Drawing.Size(160, 50);
-      this.mBusPanel.TabIndex = 0;
+      this.mBusPanel.TabIndex = 2;
+      this.mBusPanel.TabStop = true;
       // 
       // mTimeNowLabel
       // 
@@ -84,7 +88,7 @@ namespace StopWatch
             0});
       this.mStopDelayChooser.Name = "mStopDelayChooser";
       this.mStopDelayChooser.Size = new System.Drawing.Size(43, 24);
-      this.mStopDelayChooser.TabIndex = 1;
+      this.mStopDelayChooser.TabIndex = 0;
       this.mStopDelayChooser.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
       this.mStopDelayChooser.ValueChanged += new System.EventHandler(this.mStopDelayChooser_ValueChanged);
       // 
@@ -104,7 +108,7 @@ namespace StopWatch
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.mTimeNowPanel.BackColor = System.Drawing.SystemColors.ControlDark;
       this.mTimeNowPanel.Controls.Add(this.mTimeNowLabel);
-      this.mTimeNowPanel.Location = new System.Drawing.Point(0, 83);
+      this.mTimeNowPanel.Location = new System.Drawing.Point(0, 123);
       this.mTimeNowPanel.Name = "mTimeNowPanel";
       this.mTimeNowPanel.Size = new System.Drawing.Size(160, 30);
       this.mTimeNowPanel.TabIndex = 3;
@@ -115,16 +119,32 @@ namespace StopWatch
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.mStopDelayPanel.Controls.Add(this.mDelayLabelText);
       this.mStopDelayPanel.Controls.Add(this.mStopDelayChooser);
-      this.mStopDelayPanel.Location = new System.Drawing.Point(0, 50);
+      this.mStopDelayPanel.Location = new System.Drawing.Point(0, 90);
       this.mStopDelayPanel.Name = "mStopDelayPanel";
       this.mStopDelayPanel.Size = new System.Drawing.Size(160, 32);
       this.mStopDelayPanel.TabIndex = 0;
+      // 
+      // mOpenFileDialog
+      // 
+      this.mOpenFileDialog.Filter = "HTML files (*.htm, *.html)|*.htm;*.html";
+      this.mOpenFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.mOpenFileDialog_FileOk);
+      // 
+      // mButtonOpenFile
+      // 
+      this.mButtonOpenFile.Location = new System.Drawing.Point(3, 6);
+      this.mButtonOpenFile.Name = "mButtonOpenFile";
+      this.mButtonOpenFile.Size = new System.Drawing.Size(49, 27);
+      this.mButtonOpenFile.TabIndex = 9;
+      this.mButtonOpenFile.Text = "File...";
+      this.mButtonOpenFile.UseVisualStyleBackColor = true;
+      this.mButtonOpenFile.Click += new System.EventHandler(this.mButtonOpenFile_Click);
       // 
       // MainWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-      this.ClientSize = new System.Drawing.Size(160, 267);
+      this.ClientSize = new System.Drawing.Size(160, 307);
+      this.Controls.Add(this.mButtonOpenFile);
       this.Controls.Add(this.mStopDelayPanel);
       this.Controls.Add(this.mTimeNowPanel);
       this.Controls.Add(this.mBusPanel);
@@ -153,5 +173,7 @@ namespace StopWatch
     private Label mDelayLabelText;
     private Panel mTimeNowPanel;
     private Panel mStopDelayPanel;
+    private OpenFileDialog mOpenFileDialog;
+    private Button mButtonOpenFile;
   }
 }

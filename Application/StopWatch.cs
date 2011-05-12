@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Windows.Forms;
 using StopWatch.Properties;
 using System.Collections.Specialized;
@@ -13,7 +12,7 @@ namespace StopWatch
     {
       ParseCmdLineArguments(args);
 
-      StopTimes stopTimes = ParseTimetableFile(Settings.Default.TimetableFile);
+      StopTimes stopTimes = MainWindow.ParseTimetableFile(Settings.Default.TimetableFile);
       if (stopTimes != null)
       {
         foreach (string bus in Settings.Default.ExcludedBuses)
@@ -94,32 +93,6 @@ namespace StopWatch
                       "' for command line argument '" + arg + "': " +
                       message + ".",
                       "Invalid value", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-    }
-
-    private static StopTimes ParseTimetableFile(string fileName)
-    {
-      StopTimes stopTimes = null;
-
-      try
-      {
-        stopTimes = new StopTimeParser().Parse(fileName);
-      }
-      catch (FileNotFoundException)
-      {
-        MessageBox.Show(String.Format("The timetable file '{0}' doesn't exist.",
-                                      fileName),
-                        "Invalid file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-      }
-
-      if (stopTimes != null && stopTimes.Count == 0)
-      {
-        MessageBox.Show(String.Format("Couldn't find timetable information from file '{0}'.",
-                                      fileName),
-                        "Invalid file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        stopTimes = null;
-      }
-
-      return stopTimes;
     }
   }
 }
