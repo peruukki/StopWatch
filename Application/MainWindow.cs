@@ -194,6 +194,17 @@ namespace StopWatch
       mStopTimeDelayMin = (int)(sender as NumericUpDown).Value;
     }
 
+    private void SetTimetableFile(string fileName)
+    {
+      StopTimes stopTimes = ParseTimetableFile(fileName);
+      if (stopTimes != null)
+      {
+        SetStopTimes(stopTimes);
+        InitializeContent();
+        UpdateView();
+      }
+    }
+
     private void mButtonOpenFile_Click(object sender, EventArgs e)
     {
       mOpenFileDialog.ShowDialog();
@@ -201,13 +212,28 @@ namespace StopWatch
 
     private void mOpenFileDialog_FileOk(object sender, CancelEventArgs e)
     {
-      StopTimes stopTimes = ParseTimetableFile((sender as OpenFileDialog).FileName);
-      if (stopTimes != null)
+      SetTimetableFile((sender as OpenFileDialog).FileName);
+    }
+
+    private void mButtonOpenWeb_Click(object sender, EventArgs e)
+    {
+      WebFileChooser chooser = new WebFileChooser();
+      chooser.ShowDialog();
+      if (!string.IsNullOrEmpty(chooser.WebFileContent))
       {
-        SetStopTimes(stopTimes);
-        InitializeContent();
-        UpdateView();
+        string fileName = SaveWebFile(chooser.WebFileName, chooser.WebFileContent);
+        SetTimetableFile(fileName);
       }
+    }
+
+    private string SaveWebFile(string fileName, string content)
+    {
+      string fileNameFullPath = Settings.Default.TimetableDir + fileName;
+      using (TextWriter writer = new StreamWriter(fileNameFullPath))
+      {
+        writer.Write(content);
+      }
+      return fileNameFullPath;
     }
   }
 }

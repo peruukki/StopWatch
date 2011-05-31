@@ -41,6 +41,7 @@ namespace StopWatch
       this.mButtonOpenFile = new System.Windows.Forms.Button();
       this.mStopNameLabel = new System.Windows.Forms.Label();
       this.mStopNamePanel = new System.Windows.Forms.Panel();
+      this.mButtonOpenWeb = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.mStopDelayChooser)).BeginInit();
       this.mTimeNowPanel.SuspendLayout();
       this.mStopDelayPanel.SuspendLayout();
@@ -137,7 +138,7 @@ namespace StopWatch
       this.mButtonOpenFile.Anchor = System.Windows.Forms.AnchorStyles.Top;
       this.mButtonOpenFile.Location = new System.Drawing.Point(4, 6);
       this.mButtonOpenFile.Name = "mButtonOpenFile";
-      this.mButtonOpenFile.Size = new System.Drawing.Size(49, 27);
+      this.mButtonOpenFile.Size = new System.Drawing.Size(49, 25);
       this.mButtonOpenFile.TabIndex = 9;
       this.mButtonOpenFile.Text = "File...";
       this.mButtonOpenFile.UseVisualStyleBackColor = true;
@@ -167,11 +168,23 @@ namespace StopWatch
       this.mStopNamePanel.Size = new System.Drawing.Size(172, 30);
       this.mStopNamePanel.TabIndex = 10;
       // 
+      // mButtonOpenWeb
+      // 
+      this.mButtonOpenWeb.Anchor = System.Windows.Forms.AnchorStyles.Top;
+      this.mButtonOpenWeb.Location = new System.Drawing.Point(111, 6);
+      this.mButtonOpenWeb.Name = "mButtonOpenWeb";
+      this.mButtonOpenWeb.Size = new System.Drawing.Size(57, 25);
+      this.mButtonOpenWeb.TabIndex = 11;
+      this.mButtonOpenWeb.Text = "Web...";
+      this.mButtonOpenWeb.UseVisualStyleBackColor = true;
+      this.mButtonOpenWeb.Click += new System.EventHandler(this.mButtonOpenWeb_Click);
+      // 
       // MainWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
       this.ClientSize = new System.Drawing.Size(172, 347);
+      this.Controls.Add(this.mButtonOpenWeb);
       this.Controls.Add(this.mStopNamePanel);
       this.Controls.Add(this.mButtonOpenFile);
       this.Controls.Add(this.mStopDelayPanel);
@@ -208,5 +221,6 @@ namespace StopWatch
     private Button mButtonOpenFile;
     private Label mStopNameLabel;
     private Panel mStopNamePanel;
+    private Button mButtonOpenWeb;
   }
 }

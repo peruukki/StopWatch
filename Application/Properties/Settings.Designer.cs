@@ -72,5 +72,17 @@ namespace StopWatch.Properties {
                 this["StopTimeCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\")]
+        public string TimetableDir {
+            get {
+                return ((string)(this["TimetableDir"]));
+            }
+            set {
+                this["TimetableDir"] = value;
+            }
+        }
     }
 }

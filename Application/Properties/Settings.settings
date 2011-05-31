@@ -17,5 +17,8 @@
     <Setting Name="StopTimeCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
+    <Setting Name="TimetableDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
