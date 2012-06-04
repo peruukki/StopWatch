@@ -1,0 +1,15 @@
+The StopWatch program shows you the next buses leaving from your bus stop.
+
+The program is still very much incomplete but good enough for daily usage. You need to download the timetable HTML file of a particular stop to your computer and open it with the program. You also have to update the timetable file manually when the timetable changes, but fortunately that happens rather rarely. Only the Finnish timetables of Helsinki Region Transport (from http://aikataulut.hsl.fi/pysakit/fi/) are supported.
+
+Once you have the timetable set, you can select which bus lines to show in the view. You can also choose how long a delay to add to the current time as a threshold for showing the next buses leaving. This is useful if you know it will take you several minutes to get to the stop and don't want to be distracted by buses you won't make it to anyway.
+
+The program settings are not stored but you can set your preferences via the following command line arguments:
+   -c   (from Count)   how many next buses to show
+   -d   (from Delay)   the delay in minutes to add to current time for the next buses to show
+   -e   (from Exclude) the bus lines to exclude from the view separated by commas
+   -f   (from File)    the timetable file to open
+   
+Example: StopWatch.exe -c 10 -d 5 -e 21V,501 -f 1310137.html
+
+This program uses the Html Agility Pack (http://htmlagilitypack.codeplex.com) for HTML parsing.
