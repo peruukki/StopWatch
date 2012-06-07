@@ -1,4 +1,4 @@
-The StopWatch program shows you the next buses leaving from your bus stop.
+The Stop Watch program shows you the next buses leaving from your bus stop.
 
 The program is still very much incomplete but good enough for daily usage. You need to download the timetable HTML file of a particular stop to your computer and open it with the program. You also have to update the timetable file manually when the timetable changes, but fortunately that happens rather rarely. Only the Finnish timetables of Helsinki Region Transport (from http://aikataulut.hsl.fi/pysakit/fi/) are supported.
 
