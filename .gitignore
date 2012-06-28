@@ -1,0 +1,6 @@
+*.csproj.user
+*.suo
+*/bin/*
+*/obj/*
+TestingNUnit/*.csproj.VisualState.xml
+TestingNUnit/TestResult.xml
