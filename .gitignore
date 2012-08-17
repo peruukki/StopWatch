@@ -2,5 +2,5 @@
 *.suo
 */bin/*
 */obj/*
-TestingNUnit/*.csproj.VisualState.xml
+TestingNUnit/*.VisualState.xml
 TestingNUnit/TestResult.xml
