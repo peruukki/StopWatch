@@ -29,6 +29,11 @@ namespace StopWatch
       get { return mBuses.ToArray(); }
     }
 
+    public string[] ExcludedBuses
+    {
+      get { return mExcludedBuses.ToArray(); }
+    }
+
     public string StopName
     {
       get { return mStopName; }

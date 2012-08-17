@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using StopWatch.Properties;
 using System.IO;
+using System.Collections.Specialized;
 
 namespace StopWatch
 {
@@ -109,6 +110,9 @@ namespace StopWatch
         mStopTimeCount = stopTimeCount;
         CreateStopTimesView();
         UpdateView();
+
+        Settings.Default.StopTimeCount = mStopTimeCount;
+        Settings.Default.Save();
       }
       UpdateHeight();
     }
@@ -134,6 +138,11 @@ namespace StopWatch
       mStopTimes.SetIncluded(button.Text, button.Checked);
       CreateStopTimesView();
       UpdateView();
+
+      StringCollection excludedBuses = new StringCollection();
+      excludedBuses.AddRange(mStopTimes.ExcludedBuses);
+      Settings.Default.ExcludedBuses = excludedBuses;
+      Settings.Default.Save();
     }
 
     private void CreateStopTimesView()
@@ -192,6 +201,9 @@ namespace StopWatch
     private void mStopDelayChooser_ValueChanged(object sender, EventArgs e)
     {
       mStopTimeDelayMin = (int)(sender as NumericUpDown).Value;
+
+      Settings.Default.StopTimeDelay = mStopTimeDelayMin;
+      Settings.Default.Save();
     }
 
     private void SetTimetableFile(string fileName)
@@ -202,6 +214,9 @@ namespace StopWatch
         SetStopTimes(stopTimes);
         InitializeContent();
         UpdateView();
+
+        Settings.Default.TimetableFile = fileName;
+        Settings.Default.Save();
       }
     }
 
