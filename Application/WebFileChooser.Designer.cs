@@ -38,10 +38,13 @@ namespace StopWatch
       // 
       this.mAddressText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
+      this.mAddressText.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+      this.mAddressText.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
       this.mAddressText.Location = new System.Drawing.Point(12, 35);
       this.mAddressText.Name = "mAddressText";
       this.mAddressText.Size = new System.Drawing.Size(375, 24);
       this.mAddressText.TabIndex = 0;
+      this.mAddressText.Text = "http://aikataulut.hsl.fi/pysakit/fi/";
       // 
       // mAddressLabel
       // 
@@ -88,6 +91,7 @@ namespace StopWatch
       this.Controls.Add(this.mAddressLabel);
       this.Controls.Add(this.mAddressText);
       this.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
       this.MaximizeBox = false;
       this.Name = "WebFileChooser";
       this.ShowIcon = false;

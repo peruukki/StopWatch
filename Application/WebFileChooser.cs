@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using StopWatch.Properties;
+using System.Collections.Specialized;
 
 namespace StopWatch
 {
@@ -27,6 +29,20 @@ namespace StopWatch
     public WebFileChooser()
     {
       InitializeComponent();
+
+      if (Settings.Default.WebAutoComplete == null)
+      {
+        Settings.Default.WebAutoComplete = new StringCollection();
+      }
+
+      if (Settings.Default.WebAutoComplete.Count > 0)
+      {
+        foreach (string url in Settings.Default.WebAutoComplete)
+        {
+          mAddressText.AutoCompleteCustomSource.Add(url);
+        }
+        mAddressText.Text = mAddressText.AutoCompleteCustomSource[0];
+      }
     }
 
     private void mButtonOpen_Click(object sender, EventArgs args)
@@ -40,6 +56,10 @@ namespace StopWatch
           {
             mWebFileName = uri.Segments[uri.Segments.Length - 1];
             mWebFileContent = DownloadWebPage(uri);
+
+            Settings.Default.WebAutoComplete.Add(mAddressText.Text);
+            Settings.Default.Save();
+
             Close();
           }
         }
