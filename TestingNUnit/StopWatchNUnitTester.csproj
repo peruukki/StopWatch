@@ -7,7 +7,7 @@
     <ProjectGuid>{AFFB4E0D-3964-47EB-BC64-DE2632AF4B59}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StopWatchTester</RootNamespace>
+    <RootNamespace>StopWatchNUnitTester</RootNamespace>
     <AssemblyName>StopWatchTester</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -35,6 +35,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LRUListTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

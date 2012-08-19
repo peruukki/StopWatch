@@ -26,6 +26,9 @@ namespace StopWatch
       get { return mWebFileName; }
     }
 
+    private const int URL_LIST_CAPACITY = 5;
+    private readonly LRUList mUrlList;
+
     public WebFileChooser()
     {
       InitializeComponent();
@@ -34,10 +37,11 @@ namespace StopWatch
       {
         Settings.Default.WebAutoComplete = new StringCollection();
       }
+      mUrlList = new LRUList(URL_LIST_CAPACITY, Settings.Default.WebAutoComplete);
 
-      if (Settings.Default.WebAutoComplete.Count > 0)
+      if (mUrlList.Items.Count > 0)
       {
-        foreach (string url in Settings.Default.WebAutoComplete)
+        foreach (string url in mUrlList.Items)
         {
           mAddressText.AutoCompleteCustomSource.Add(url);
         }
@@ -57,7 +61,7 @@ namespace StopWatch
             mWebFileName = uri.Segments[uri.Segments.Length - 1];
             mWebFileContent = DownloadWebPage(uri);
 
-            Settings.Default.WebAutoComplete.Add(mAddressText.Text);
+            mUrlList.Add(mAddressText.Text);
             Settings.Default.Save();
 
             Close();
