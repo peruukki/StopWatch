@@ -19,7 +19,14 @@ namespace StopWatch
         {
           if (!String.IsNullOrEmpty(bus))
           {
-            stopTimes.ExcludeBus(bus);
+            try
+            {
+              stopTimes.ExcludeBus(bus);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+              MessageBox.Show(e.Message, "Invalid setting");
+            }
           }
         }
         Application.EnableVisualStyles();
