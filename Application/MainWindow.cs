@@ -216,6 +216,7 @@ namespace StopWatch
         UpdateView();
 
         Settings.Default.TimetableFile = fileName;
+        Settings.Default.ExcludedBuses.Clear();
         Settings.Default.Save();
       }
     }
