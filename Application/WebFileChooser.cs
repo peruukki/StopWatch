@@ -59,6 +59,10 @@ namespace StopWatch
           if (uri.Segments.Length > 0)
           {
             mWebFileName = uri.Segments[uri.Segments.Length - 1];
+            if (!mWebFileName.EndsWith(".html"))
+            {
+              throw new UriFormatException("The internet address must end with '.html'.");
+            }
             mWebFileContent = DownloadWebPage(uri);
 
             mUrlList.Add(mAddressText.Text);
@@ -72,6 +76,11 @@ namespace StopWatch
           MessageBox.Show(e.Message, "Invalid internet address",
                           MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        catch (WebException e)
+        {
+          MessageBox.Show(e.Message, "Web file open failed",
+                          MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
       }
     }
 
@@ -80,20 +89,12 @@ namespace StopWatch
       string pageContent = string.Empty;
 
       HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
-      try
+      using (WebResponse response = request.GetResponse())
       {
-        using (WebResponse response = request.GetResponse())
+        using (StreamReader reader = new StreamReader(response.GetResponseStream()))
         {
-          using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-          {
-            pageContent = reader.ReadToEnd();
-          }
+          pageContent = reader.ReadToEnd();
         }
-      }
-      catch (WebException e)
-      {
-        MessageBox.Show(e.Message, "Web file open failed",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
       }
 
       return pageContent;
