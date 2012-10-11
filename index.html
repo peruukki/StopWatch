@@ -17,8 +17,8 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Stopwatch</h1>
-        <p>StopWatch shows you the next buses leaving from your bus stop. I use it daily before I leave work.</p>
+        <h1>Stop Watch</h1>
+        <p>Stop Watch shows you the next buses leaving from your bus stop. I used to benefit from it daily before I left work.</p>
         <p class="view"><a href="https://github.com/peruukki/StopWatch">View the Project on GitHub <small>peruukki/StopWatch</small></a></p>
         <ul>
           <li><a href="https://github.com/peruukki/StopWatch/zipball/master">Download <strong>ZIP File</strong></a></li>
@@ -27,22 +27,13 @@
         </ul>
       </header>
       <section>
-        <p>The StopWatch program shows you the next buses leaving from your bus stop.</p>
+        <p>The Stop Watch program shows you the next buses leaving from your bus stop.</p>
 
 <p><img src="http://peruukki.github.com/StopWatch/images/screenshot.png" alt="Screenshot"></p>
 
-<p>The program is still very much incomplete but good enough for daily usage. You need to download the timetable HTML file of a particular stop to your computer and open it with the program. You also have to update the timetable file manually when the timetable changes, but fortunately that happens rather rarely. Only the Finnish timetables of Helsinki Region Transport (from <a href="http://aikataulut.hsl.fi/pysakit/fi/">http://aikataulut.hsl.fi/pysakit/fi/</a>) are supported.</p>
+<p>The program is not as complete as it could be but good enough for daily usage. You need to download the timetable HTML file of a particular stop to your computer and open it with the program. You also have to update the timetable file manually when the timetable changes, but fortunately that happens rather rarely. Only the Finnish timetables of Helsinki Region Transport (from <a href="http://aikataulut.hsl.fi/pysakit/fi/">http://aikataulut.hsl.fi/pysakit/fi/</a>) are supported.</p>
 
 <p>Once you have the timetable set, you can select which bus lines to show in the view. You can also choose how long a delay to add to the current time as a threshold for showing the next buses leaving. This is useful if you know it will take you several minutes to get to the stop and don't want to be distracted by buses you won't make it to anyway.</p>
-
-<p>The program settings are not stored but you can set your preferences via the following command line arguments:</p>
-
-<ul>
-<li>-c   (from Count)   how many &lt;next buses to show</li>
-<li>-d   (from Delay)   the delay in minutes to add to current time for the next buses to show</li>
-<li>-e   (from Exclude) the bus lines to exclude from the view separated by commas</li>
-<li>-f   (from File)    the timetable file to open</li>
-</ul><p>Example: StopWatch.exe -c 10 -d 5 -e 21V,501 -f 1310137.html</p>
 
 <p>This program uses the Html Agility Pack (<a href="http://htmlagilitypack.codeplex.com">http://htmlagilitypack.codeplex.com</a>) for HTML parsing.</p>
       </section>
