@@ -207,34 +207,30 @@ namespace StopWatch
       {
         foreach (HtmlAttribute attribute in node.Attributes.AttributesWithName("class"))
         {
-          switch (attribute.Value)
+          IList<string> classes = new List<string>(attribute.Value.Split());
+          if (classes.Contains(CLASS_HOUR))
           {
-            case CLASS_HOUR:
-              mHour = ParseHour(node.InnerText, mHour, outText);
-              break;
-
-            case CLASS_MINUTE:
-              mMinute = ParseMinute(node.InnerText, outText);
-              break;
-
-            case CLASS_BUS:
-              if (mHour != INVALID_VALUE && mMinute != INVALID_VALUE)
+            mHour = ParseHour(node.InnerText, mHour, outText);
+          }
+          else if (classes.Contains(CLASS_MINUTE))
+          {
+            mMinute = ParseMinute(node.InnerText, outText);
+          }
+          else if (classes.Contains(CLASS_BUS))
+          {
+            if (mHour != INVALID_VALUE && mMinute != INVALID_VALUE)
+            {
+              try
               {
-                try
-                {
-                  StopTime stopTime = mStopTimes.Add(mWeekday, mHour, mMinute,
-                                                     ParseBus(node.InnerText));
-                  outText.Write(stopTime + "   ");
-                }
-                catch (ArgumentException e)
-                {
-                  outText.WriteLine("Failed to add stop time: " + e.Message);
-                }
+                StopTime stopTime = mStopTimes.Add(mWeekday, mHour, mMinute,
+                                                   ParseBus(node.InnerText));
+                outText.Write(stopTime + "   ");
               }
-              break;
-
-            default:
-              break;
+              catch (ArgumentException e)
+              {
+                outText.WriteLine("Failed to add stop time: " + e.Message);
+              }
+            }
           }
         }
       }

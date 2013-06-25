@@ -35,7 +35,7 @@ namespace StopWatchNUnitTester
     [Test]
     public void ParseValid()
     {
-      Assert.That(times.Count, Is.EqualTo(457));
+      Assert.That(times.Count, Is.EqualTo(211));
       Console.WriteLine(times.Count + " stop times parsed:");
       Console.Write(times);
     }
@@ -43,15 +43,15 @@ namespace StopWatchNUnitTester
     [Test]
     public void GetDifferenceLastHourOfDay()
     {
-      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 25, 12), 0,
-                        new TimeSpan(6, 14, 48), 1);
+      GetDifferenceFrom(new DateTime(2013, 6, 25, 23, 50, 12), 0,
+                        new TimeSpan(0, 27, 48), 1);
     }
 
     [Test]
     public void GetDifferenceLastMinuteOfDay()
     {
-      GetDifferenceFrom(new DateTime(2011, 4, 29, 23, 59, 12), 0,
-                        new TimeSpan(5, 40, 48), 1);
+      GetDifferenceFrom(new DateTime(2013, 6, 25, 23, 59, 12), 0,
+                        new TimeSpan(0, 18, 48), 1);
     }
 
     [Test]
@@ -115,15 +115,15 @@ namespace StopWatchNUnitTester
     public void Buses()
     {
       string[] buses = times.Buses;
+      IList<string> expectedBuses = new List<string>(new string[] { "20N", "21V", "65A", "66A", "501", "501V" });
       Console.Write("Buses:");
       foreach (string bus in buses)
       {
         Console.Write(" " + bus);
-        Assert.That("65A".Equals(bus) || "66A".Equals(bus) || "501".Equals(bus) ||
-                    "21V".Equals(bus), Is.True);
+        Assert.That(expectedBuses.Contains(bus), Is.True);
       }
       Console.WriteLine("");
-      Assert.That(buses.Length, Is.EqualTo(4));
+      Assert.That(buses.Length, Is.EqualTo(6));
     }
 
     [Test]
