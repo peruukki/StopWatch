@@ -39,7 +39,7 @@ namespace StopWatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\1310137.html")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1310137.html")]
         public string TimetableFile {
             get {
                 return ((string)(this["TimetableFile"]));

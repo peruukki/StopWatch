@@ -9,7 +9,7 @@
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="TimetableFile" Type="System.String" Scope="User">
-      <Value Profile="(Default)">..\..\1310137.html</Value>
+      <Value Profile="(Default)">1310137.html</Value>
     </Setting>
     <Setting Name="StopTimeDelay" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
